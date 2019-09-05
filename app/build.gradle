@@ -1,0 +1,127 @@
+apply plugin: 'com.android.application'
+
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
+apply plugin: 'kotlin-android-extensions'
+
+android {
+    compileSdkVersion 28
+    defaultConfig {
+        applicationId "com.anibalbastias.android.pulentapp"
+        minSdkVersion 21
+        targetSdkVersion 28
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        resValue "string", "pulent_endpoint", "$globalPulentDependencies.PULENT_BASE_ENDPOINT"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        targetCompatibility 1.8
+        sourceCompatibility 1.8
+    }
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+    // Parcelize use
+    androidExtensions {
+        experimental = true
+    }
+    dataBinding {
+        enabled = true
+    }
+
+    // APK Release name
+    setProperty("archivesBaseName", "PulentApp-v${rootProject.ext.appPulentVersionName}")
+}
+
+kapt {
+    generateStubs = true
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation 'androidx.appcompat:appcompat:1.0.2'
+    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'androidx.test:runner:1.2.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+
+    def presentationDependencies = rootProject.ext.pulentDependencies
+
+    implementation presentationDependencies.kotlinStdlib
+    implementation presentationDependencies.androidDesign
+    implementation presentationDependencies.androidSupportv4
+    implementation presentationDependencies.androidCompatv7
+    implementation presentationDependencies.androidCardView
+    implementation presentationDependencies.androidRecyclerView
+    implementation presentationDependencies.multidex
+    implementation presentationDependencies.rxAndroid
+    implementation presentationDependencies.retrofit2
+    implementation presentationDependencies.retrofit2Converter
+    implementation presentationDependencies.retrofit2RxAdapter
+    implementation presentationDependencies.gson
+    implementation presentationDependencies.okHttpLoggingInterceptor
+    implementation presentationDependencies.okhttp
+    implementation presentationDependencies.okhttpUrlconnection
+
+    //Dagger
+    implementation presentationDependencies.dagger
+    kapt presentationDependencies.daggerCompiler
+
+    implementation presentationDependencies.daggerAndroid
+    kapt presentationDependencies.daggerAndroidCompiler
+
+    // ViewModel and LiveData
+    implementation presentationDependencies.androidArchExt
+    kapt presentationDependencies.androidArchCompiler
+
+    // Room (use 1.1.0-alpha1 for latest alpha)
+    implementation presentationDependencies.room
+    kapt presentationDependencies.roomCompiler
+
+    // RxJava support for Room
+    implementation presentationDependencies.roomRxJava
+
+    // ReactiveStreams support for LiveData
+    implementation presentationDependencies.lcReactiveStreams
+
+    //MaterialScrollBar
+    implementation 'com.simplecityapps:recyclerview-fastscroll:2.0.0'
+    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+    implementation('com.crashlytics.sdk.android:crashlytics:2.9.0@aar') {
+        transitive = true
+    }
+    implementation 'androidx.browser:browser:1.0.0'
+    implementation 'com.synnapps:carouselview:0.1.4'
+    implementation 'com.google.android:flexbox:0.3.2'
+
+    // Java8 support for Lifecycles
+    implementation 'androidx.lifecycle:lifecycle-common-java8:2.0.0'
+    implementation("org.jetbrains.kotlin:kotlin-reflect:1.2.71")
+
+    //Glide
+    def modelBaseDependencies = rootProject.ext.moduleDependencies
+    api modelBaseDependencies.glide
+    kapt modelBaseDependencies.glideCompiler
+
+    implementation ('com.github.bumptech.glide:okhttp3-integration:1.4.0'){
+        exclude group: 'glide-parent'
+    }
+
+    // Jetpack Navigation
+    implementation 'com.google.android.material:material:1.0.0'
+    implementation "androidx.activity:activity-ktx:1.1.0-alpha02"
+    implementation "androidx.navigation:navigation-fragment-ktx:2.2.0-alpha01"
+    implementation "androidx.navigation:navigation-ui-ktx:2.2.0-alpha01"
+    implementation 'androidx.core:core-ktx:1.2.0-alpha03'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-savedstate:1.0.0-alpha03'
+}
