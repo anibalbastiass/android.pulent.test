@@ -1,4 +1,4 @@
-package com.anibalbastias.android.pulentapp.ui.series.viewmodel
+package com.anibalbastias.android.pulentapp.ui.search.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -40,6 +40,7 @@ class SearchMusicViewModel @Inject constructor(private val getSearchMusicUseCase
         map["offset"] = "60"
         map["mediaType"] = "music"
         map["limit"] = "20"
+        map["country"] = "cl"
 
         getSearchMusicLiveData.postValue(Resource(ResourceState.LOADING, null, null))
         getSearchMusicUseCase.execute(

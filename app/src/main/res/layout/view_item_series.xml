@@ -5,6 +5,14 @@
     <data>
 
         <variable
+                name="item"
+                type="com.anibalbastias.android.pulentapp.base.api.data.dataStoreFactory.series.model.SeriesItemData" />
+
+        <variable
+                name="clickHandler"
+                type="com.anibalbastias.android.pulentapp.base.adapter.base.BaseBindClickHandler" />
+
+        <variable
                 name="seriesVD"
                 type="com.anibalbastias.android.pulentapp.base.api.data.dataStoreFactory.series.model.SeriesItemData"/>
 

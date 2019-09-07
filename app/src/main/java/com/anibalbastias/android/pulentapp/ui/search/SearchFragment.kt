@@ -14,12 +14,11 @@ import com.anibalbastias.android.pulentapp.base.module.getViewModel
 import com.anibalbastias.android.pulentapp.base.view.BaseModuleFragment
 import com.anibalbastias.android.pulentapp.base.view.ResourceState
 import com.anibalbastias.android.pulentapp.databinding.FragmentSearchMusicBinding
-import com.anibalbastias.android.pulentapp.ui.series.adapter.SeriesListAdapter
-import com.anibalbastias.android.pulentapp.ui.series.viewmodel.SearchMusicViewModel
+import com.anibalbastias.android.pulentapp.ui.search.viewmodel.SearchMusicViewModel
 import com.anibalbastias.android.pulentapp.util.*
 import javax.inject.Inject
 
-class SeriesFragment : BaseModuleFragment() {
+class SearchFragment : BaseModuleFragment() {
 
     override fun tagName(): String = this::class.java.simpleName
     override fun layoutId(): Int = R.layout.fragment_search_music
@@ -37,10 +36,10 @@ class SeriesFragment : BaseModuleFragment() {
         setHasOptionsMenu(true)
     }
 
-    operator fun invoke(): SeriesFragment {
+    operator fun invoke(): SearchFragment {
 
         val args = Bundle()
-        val fragment = SeriesFragment()
+        val fragment = SearchFragment()
 
         fragment.run {
             //            stockPathFile = stockPath
@@ -64,7 +63,7 @@ class SeriesFragment : BaseModuleFragment() {
     }
 
     private fun initViewModel() {
-        searchViewModel.getPageLiveData().initObserver(this@SeriesFragment) {
+        searchViewModel.getPageLiveData().initObserver(this@SearchFragment) {
             if (it != null) {
                 this.handlePageData(it.status, it.data, it.message)
             }
@@ -103,10 +102,10 @@ class SeriesFragment : BaseModuleFragment() {
             LinearLayoutManager.VERTICAL, false
         )
 
-        val adapter = SeriesListAdapter()
+//        val adapter = SeriesListAdapter()
 //        adapter?.itemCallback = this
-        adapter?.items = results as MutableList<SeriesItemData>?
-        binding?.searchListRecyclerView?.adapter = adapter
+//        adapter?.items = results as MutableList<SeriesItemData>?
+//        binding?.searchListRecyclerView?.adapter = adapter
     }
 
     private fun initToolbar() {
