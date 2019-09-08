@@ -152,4 +152,9 @@ class SearchMusicViewModel @Inject constructor(
             callback?.onGetRecentSearchFromRealm(t)
         }
     }
+
+    fun clearRecentSearchList(callback: GetSearchRecentsListener?) {
+        RealmManager.createSearchRecentDao().removeAll()
+        callback?.onGetRecentSearchFromRealm(null)
+    }
 }

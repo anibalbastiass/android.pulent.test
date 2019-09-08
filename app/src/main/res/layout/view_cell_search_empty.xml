@@ -39,22 +39,38 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
+        <TextView
+                android:id="@+id/emptySearchClearButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:fontFamily="@font/opensans_semibold"
+                android:foreground="?android:attr/selectableItemBackground"
+                android:onClick="@{(v) -> recentSearchCallback.onClearSearchItems()}"
+                android:maxLines="1"
+                android:padding="20dp"
+                android:text="@string/emptySearchClearButton"
+                android:textColor="@color/primaryColor"
+                android:textSize="14sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
         <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/emptySearchRecyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:clipChildren="false"
                 android:clipToPadding="false"
+                android:paddingBottom="10dp"
                 android:scrollbars="vertical"
                 android:visibility="visible"
-                android:paddingBottom="10dp"
-                bind:loadAdapterData="@{searchViewModel.searchRecentList}"
-                bind:loadAdapterLayout="@{searchViewModel.searchRecentLayout}"
-                bind:loadAdapterListener="@{recentSearchCallback}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/emptySearchTitle"
+                bind:loadAdapterData="@{searchViewModel.searchRecentList}"
+                bind:loadAdapterLayout="@{searchViewModel.searchRecentLayout}"
+                bind:loadAdapterListener="@{recentSearchCallback}"
                 tools:listitem="@layout/view_cell_search_recent_search_item" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

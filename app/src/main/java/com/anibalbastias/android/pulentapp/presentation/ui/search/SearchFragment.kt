@@ -253,9 +253,9 @@ class SearchFragment : BaseModuleFragment(),
         searchViewModel.loadRecentSearchListAsync(this)
     }
 
-    override fun onGetRecentSearchFromRealm(list: RealmResults<SearchRecentRealmData>) {
+    override fun onGetRecentSearchFromRealm(list: RealmResults<SearchRecentRealmData>?) {
         val searchList = arrayListOf<SearchRecentRealmData>()
-        list.forEach { item ->
+        list?.forEach { item ->
             searchList.add(item)
         }
         searchViewModel.searchRecentList.set(searchList)
@@ -273,6 +273,10 @@ class SearchFragment : BaseModuleFragment(),
                 setSelection(keyword.get()?.length!!)
             }
         }
+    }
+
+    override fun onClearSearchItems() {
+        searchViewModel.clearRecentSearchList(this)
     }
 
     private fun getImageViewFromChild(view: View): ImageView {

@@ -13,4 +13,5 @@ interface SearchRecentsListener<T> : BaseBindClickHandler<T> {
 
     override fun onClickView(view: View, item: T)
     fun onClickSearchRecentItem(list: SearchRecentRealmData)
+    fun onClearSearchItems()
 }

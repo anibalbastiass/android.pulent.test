@@ -6,4 +6,5 @@
     <string name="td_inventory_search_title">Search</string>
     <string name="loading_new_items_text">Loading new items…</string>
     <string name="emptySearchTitle">Recent Searches</string>
+    <string name="emptySearchClearButton">Clear</string>
 </resources>

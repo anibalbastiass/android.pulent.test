@@ -8,5 +8,5 @@ import io.realm.RealmResults
  */
 
 interface GetSearchRecentsListener {
-    fun onGetRecentSearchFromRealm(list: RealmResults<SearchRecentRealmData>)
+    fun onGetRecentSearchFromRealm(list: RealmResults<SearchRecentRealmData>?)
 }
