@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:bind="http://schemas.android.com/apk/res-auto"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+                name="searchViewModel"
+                type="com.anibalbastias.android.pulentapp.ui.search.viewmodel.SearchMusicViewModel" />
+
+        <variable
+                name="finderCallback"
+                type="com.anibalbastias.android.pulentapp.ui.search.interfaces.SearchListener" />
+
+        <variable
+                name="clearableListener"
+                type="com.anibalbastias.android.pulentapp.util.ClearableEditText.Listener" />
+
+    </data>
+
+    <LinearLayout
+            android:id="@+id/testDriveFinderContainer"
+            android:layout_width="match_parent"
+            android:layout_height="65dp"
+            android:background="@color/white"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+        <com.anibalbastias.android.pulentapp.util.ClearableEditText
+                android:id="@+id/testDriveFinderEditText"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_weight="1"
+                android:background="@drawable/shape_finder"
+                android:drawable="@drawable/ic_cross_action"
+                android:drawableStart="@drawable/ic_search"
+                android:drawableTint="@color/darkGrey2"
+                android:ellipsize="end"
+                android:fontFamily="@font/opensans_regular"
+                android:hint="@string/td_inventory_search_title"
+                android:imeActionId="@+id/send"
+                android:imeActionLabel="@string/action_send"
+                android:imeOptions="actionSearch"
+                android:inputType="text"
+                app:setListener="@{clearableListener}"
+                android:onTextChanged="@{searchViewModel::onKeywordTextChanged}"
+                android:padding="8dp"
+                android:singleLine="true"
+                android:textColor="@color/darkGrey2"
+                android:textSize="14sp"
+                bind:sendEditTextAction="@{finderCallback}"
+                tools:ignore="InvalidImeActionId" />
+
+    </LinearLayout>
+
+</layout>

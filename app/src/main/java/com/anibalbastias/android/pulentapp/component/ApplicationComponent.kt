@@ -6,7 +6,8 @@ import com.anibalbastias.android.pulentapp.module.ViewModelModule
 import com.anibalbastias.android.pulentapp.MainActivity
 import com.anibalbastias.android.pulentapp.base.module.component.BaseApplicationComponent
 import com.anibalbastias.android.pulentapp.module.PulentRepositoryModule
-import com.anibalbastias.android.pulentapp.ui.series.SeriesFragment
+import com.anibalbastias.android.pulentapp.ui.entry.EntryFragment
+import com.anibalbastias.android.pulentapp.ui.search.SearchFragment
 import dagger.Component
 import javax.inject.Singleton
 
@@ -24,5 +25,6 @@ interface ApplicationComponent : BaseApplicationComponent, FragmentInjector {
 }
 
 interface FragmentInjector {
-    fun inject(seriesFragment: SeriesFragment)
+    fun inject(entryFragment: EntryFragment)
+    fun inject(searchFragment: SearchFragment)
 }
