@@ -5,9 +5,9 @@ import android.view.View
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.SavedStateViewModelFactory
+import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.anibalbastias.android.pulentapp.R
 import com.anibalbastias.android.pulentapp.presentation.appComponent
 import com.anibalbastias.android.pulentapp.presentation.util.adapter.base.BaseBindClickHandler
 import com.anibalbastias.android.pulentapp.base.module.getViewModel
@@ -23,6 +23,12 @@ import com.anibalbastias.android.pulentapp.presentation.util.*
 import com.anibalbastias.android.pulentapp.presentation.util.widget.ClearableEditText
 import com.anibalbastias.android.pulentapp.presentation.util.widget.WrapContentLinearLayoutManager
 import javax.inject.Inject
+import android.widget.ImageView
+import android.widget.LinearLayout
+import androidx.cardview.widget.CardView
+import androidx.core.view.ViewCompat
+import com.anibalbastias.android.pulentapp.R
+
 
 class SearchFragment : BaseModuleFragment(),
     SearchListener,
@@ -183,17 +189,22 @@ class SearchFragment : BaseModuleFragment(),
     }
 
     private fun paginationForRecyclerScroll() {
-        binding?.searchListRecyclerView?.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+        binding?.searchListRecyclerView?.addOnScrollListener(object :
+            RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
 
-                searchViewModel.itemPosition.set((binding?.searchListRecyclerView?.layoutManager as
-                        WrapContentLinearLayoutManager).findFirstVisibleItemPosition())
+                searchViewModel.itemPosition.set(
+                    (binding?.searchListRecyclerView?.layoutManager as
+                            WrapContentLinearLayoutManager).findFirstVisibleItemPosition()
+                )
 
                 if (searchViewModel.nextPageURL.get()?.isNotEmpty()!!) {
-                    val visibleItemCount = binding?.searchListRecyclerView?.layoutManager?.childCount
+                    val visibleItemCount =
+                        binding?.searchListRecyclerView?.layoutManager?.childCount
                     val totalItemCount = binding?.searchListRecyclerView?.layoutManager?.itemCount
-                    val firstVisibleItemPosition = (binding?.searchListRecyclerView?.layoutManager as WrapContentLinearLayoutManager).findFirstVisibleItemPosition()
+                    val firstVisibleItemPosition =
+                        (binding?.searchListRecyclerView?.layoutManager as WrapContentLinearLayoutManager).findFirstVisibleItemPosition()
 
                     if (!searchViewModel.isLoadingMorePages.get()) {
                         if (visibleItemCount!! + firstVisibleItemPosition >= totalItemCount!! && firstVisibleItemPosition >= 0) {
@@ -223,8 +234,25 @@ class SearchFragment : BaseModuleFragment(),
 
     }
 
+    private fun getImageViewFromChild(view: View): ImageView {
+        val cardView = (view as? CardView)
+        val ll1 = (cardView?.getChildAt(0) as? LinearLayout)
+        val ll2 = (ll1?.getChildAt(0) as? LinearLayout)
+        return (ll2?.getChildAt(0) as? ImageView)!!
+    }
+
     override fun onClickView(view: View, item: SearchResultItemViewData) {
-        nextNavigate(SearchFragmentDirections.actionSearchFragmentToResultItemFragment().actionId)
+        val extras = FragmentNavigatorExtras(
+            getImageViewFromChild(view) to "secondTransitionName"
+        )
+        ViewCompat.setTransitionName(getImageViewFromChild(view), "secondTransitionName")
+
+        // Share Data
+        sharedViewModel.resultItemViewData = item
+        nextNavigate(
+            nav = SearchFragmentDirections.actionSearchFragmentToResultItemFragment().actionId,
+            extras = extras
+        )
     }
 
     private fun initToolbar() {

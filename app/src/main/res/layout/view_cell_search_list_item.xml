@@ -40,7 +40,8 @@
             <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:clipToPadding="false">
 
                 <ImageView
                         android:id="@+id/testDriveInventoryItemImageView"
@@ -51,6 +52,7 @@
                         android:layout_weight="30"
                         android:padding="10dp"
                         android:scaleType="fitCenter"
+                        android:transitionName="firstTransitionName"
                         bind:setImageUrl="@{item.artworkUrl100}"
                         tools:src="@drawable/placeholder" />
 

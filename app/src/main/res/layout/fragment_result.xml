@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
@@ -13,15 +14,19 @@
 
         <TextView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:gravity="center"
                 android:text="Result Item" />
 
         <ImageView
                 android:id="@+id/resultItemImage"
-                android:layout_width="300dp"
-                android:layout_height="300dp" />
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                android:layout_gravity="center"
+                android:src="@drawable/placeholder"
+                android:scaleType="fitCenter"
+                android:transitionName="secondTransitionName" />
 
     </LinearLayout>
 

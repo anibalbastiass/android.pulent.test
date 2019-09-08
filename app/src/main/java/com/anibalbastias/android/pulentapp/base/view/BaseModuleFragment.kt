@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
+import androidx.navigation.Navigator
 import com.anibalbastias.android.pulentapp.domain.base.db.RealmManager
 import com.anibalbastias.android.pulentapp.base.module.ViewModelFactory
 import com.anibalbastias.android.pulentapp.presentation.util.inflate
@@ -72,19 +73,23 @@ abstract class BaseModuleFragment : Fragment() {
         navController?.navigateUp()
     }
 
-    fun nextNavigate(nav: Int?, bundle: Bundle? = null) {
+    fun nextNavigate(nav: Int?, bundle: Bundle? = null, extras: Navigator.Extras? = null) {
         when (nav) {
             -1 -> navigateToUp()
-            else -> navigate(nav ?: 0, bundle)
+            else -> navigate(nav ?: 0, bundle, extras)
         }
     }
 
-    private fun navigate(destination: Int, bundle: Bundle? = null) {
+    private fun navigate(
+        destination: Int,
+        bundle: Bundle? = null,
+        extras: Navigator.Extras?
+    ) {
         if (destination == 0)
             navController?.navigateUp()
         else {
             try {
-                navController?.navigate(destination, bundle)
+                navController?.navigate(destination, bundle, null, extras)
             } catch (e: IllegalArgumentException) {
                 // Actions for finish flow
                 activity?.finish()

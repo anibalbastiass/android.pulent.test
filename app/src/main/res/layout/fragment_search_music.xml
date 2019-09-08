@@ -80,6 +80,7 @@
                     android:layout_height="0dp"
                     android:clipToPadding="false"
                     android:scrollbars="vertical"
+                    android:clipChildren="false"
                     tools:listitem="@layout/view_cell_search_list_item"
                     android:visibility="visible" />
 
