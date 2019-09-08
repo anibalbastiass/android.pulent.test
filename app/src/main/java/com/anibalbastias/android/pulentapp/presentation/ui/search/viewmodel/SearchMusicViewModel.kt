@@ -4,6 +4,7 @@ import androidx.databinding.ObservableBoolean
 import androidx.databinding.ObservableField
 import androidx.databinding.ObservableInt
 import androidx.lifecycle.MutableLiveData
+import com.anibalbastias.android.pulentapp.R
 import com.anibalbastias.android.pulentapp.domain.search.usecase.GetSearchMusicUseCase
 import com.anibalbastias.android.pulentapp.base.subscriber.BaseSubscriber
 import com.anibalbastias.android.pulentapp.base.view.BaseViewModel
@@ -51,6 +52,11 @@ class SearchMusicViewModel @Inject constructor(
     var nextPageURL: ObservableField<String> = ObservableField(String.empty())
     var lastPosition: ObservableInt = ObservableInt(0)
     var itemPosition: ObservableInt = ObservableInt(0)
+
+    var searchRecentList: ObservableField<ArrayList<SearchRecentRealmData>> = ObservableField(
+        arrayListOf()
+    )
+    var searchRecentLayout: Int = R.layout.view_cell_search_recent_search_item
     // endregion
 
     var isLoadingMorePages: AtomicBoolean = AtomicBoolean(false)
@@ -129,7 +135,6 @@ class SearchMusicViewModel @Inject constructor(
         itemsVD: java.util.ArrayList<SearchResultItemViewData?>
     ) {
         val searchItem = SearchRecentRealmData()
-        searchItem.id = Date().time.toInt()
         searchItem.keyword = keyword
 
         val itemsResult = itemsVD.map {

@@ -6,6 +6,13 @@
 
     <data>
 
+        <variable
+                name="searchViewModel"
+                type="com.anibalbastias.android.pulentapp.presentation.ui.search.viewmodel.SearchMusicViewModel" />
+
+        <variable
+                name="recentSearchCallback"
+                type="com.anibalbastias.android.pulentapp.presentation.ui.search.interfaces.SearchRecentsListener" />
 
     </data>
 
@@ -40,6 +47,10 @@
                 android:clipToPadding="false"
                 android:scrollbars="vertical"
                 android:visibility="visible"
+                android:paddingBottom="10dp"
+                bind:loadAdapterData="@{searchViewModel.searchRecentList}"
+                bind:loadAdapterLayout="@{searchViewModel.searchRecentLayout}"
+                bind:loadAdapterListener="@{recentSearchCallback}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

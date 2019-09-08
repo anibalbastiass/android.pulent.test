@@ -8,18 +8,18 @@
 
         <variable
                 name="item"
-                type="com.anibalbastias.android.pulentapp.presentation.ui.search.model.SearchResultItemViewData" />
+                type="com.anibalbastias.android.pulentapp.domain.search.model.SearchRecentRealmData" />
 
         <variable
                 name="clickHandler"
-                type="com.anibalbastias.android.pulentapp.presentation.util.adapter.base.BaseBindClickHandler" />
+                type="com.anibalbastias.android.pulentapp.presentation.ui.search.interfaces.SearchRecentsListener" />
 
     </data>
 
     <androidx.cardview.widget.CardView
             android:id="@+id/searchRecentItemContainer"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="50dp"
             android:layout_marginStart="16sp"
             android:layout_marginTop="16sp"
             android:layout_marginEnd="16sp"
@@ -27,7 +27,7 @@
             android:foreground="?android:attr/selectableItemBackground"
             android:clickable="true"
             android:focusable="true"
-            android:onClick="@{(v) -> clickHandler.onClickView(v, item)}"
+            android:onClick="@{(v) -> clickHandler.onClickSearchRecentItem(item)}"
             card_view:cardCornerRadius="4dp"
             card_view:cardElevation="4dp"
             card_view:cardUseCompatPadding="false">
@@ -39,13 +39,13 @@
 
             <ImageView
                     android:id="@+id/searchRecentImageView"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
                     android:layout_gravity="center"
-                    android:padding="5dp"
+                    android:padding="10dp"
                     android:scaleType="fitCenter"
                     android:transitionName="firstTransitionName"
-                    tools:src="@drawable/ic_search" />
+                    android:src="@drawable/ic_search" />
 
             <TextView
                     android:id="@+id/searchRecentTitle"
@@ -54,7 +54,7 @@
                     android:ellipsize="end"
                     android:maxLines="1"
                     android:layout_gravity="center"
-                    android:text="Search 1"
+                    android:text="@{item.keyword}"
                     android:textColor="@color/normalTextColor"
                     android:textSize="14sp"
                     tools:text="BMW X5 xDrive30d E70 Wagon" />

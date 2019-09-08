@@ -17,6 +17,10 @@
                 type="com.anibalbastias.android.pulentapp.presentation.ui.search.interfaces.SearchListener" />
 
         <variable
+                name="recentSearchCallback"
+                type="com.anibalbastias.android.pulentapp.presentation.ui.search.interfaces.SearchRecentsListener" />
+
+        <variable
                 name="clearableListener"
                 type="com.anibalbastias.android.pulentapp.presentation.util.widget.ClearableEditText.Listener" />
 
@@ -91,6 +95,8 @@
                 layout="@layout/view_cell_search_empty"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
+                bind:searchViewModel="@{searchViewModel}"
+                bind:recentSearchCallback="@{recentSearchCallback}"
                 android:visibility="@{searchViewModel.isEmpty == true ? View.VISIBLE : View.GONE}"
                 tools:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="parent"

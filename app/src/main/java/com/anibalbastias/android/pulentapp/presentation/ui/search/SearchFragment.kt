@@ -1,6 +1,7 @@
 package com.anibalbastias.android.pulentapp.presentation.ui.search
 
 import android.os.Bundle
+import android.text.Editable
 import android.view.View
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
@@ -30,6 +31,7 @@ import androidx.core.view.ViewCompat
 import com.anibalbastias.android.pulentapp.R
 import com.anibalbastias.android.pulentapp.domain.search.model.SearchRecentRealmData
 import com.anibalbastias.android.pulentapp.presentation.ui.search.interfaces.GetSearchRecentsListener
+import com.anibalbastias.android.pulentapp.presentation.ui.search.interfaces.SearchRecentsListener
 import io.realm.RealmResults
 
 
@@ -37,7 +39,8 @@ class SearchFragment : BaseModuleFragment(),
     SearchListener,
     ClearableEditText.Listener,
     BaseBindClickHandler<SearchResultItemViewData>,
-    GetSearchRecentsListener {
+    GetSearchRecentsListener,
+    SearchRecentsListener<SearchResultItemViewData> {
 
     override fun tagName(): String = this::class.java.simpleName
     override fun layoutId(): Int = R.layout.fragment_search_music
@@ -67,6 +70,7 @@ class SearchFragment : BaseModuleFragment(),
 
         binding?.searchViewModel = searchViewModel
         binding?.finderCallback = this
+        binding?.recentSearchCallback = this
         binding?.clearableListener = this
         binding?.lifecycleOwner = this
 
@@ -156,7 +160,10 @@ class SearchFragment : BaseModuleFragment(),
                         searchMusicAdapter.items = itemsVD
                         searchViewModel.isEmpty.set(false)
 
-                        searchViewModel.putRecentSearchItem(searchViewModel.keyword.get()!!, itemsVD)
+                        searchViewModel.putRecentSearchItem(
+                            searchViewModel.keyword.get()!!,
+                            itemsVD
+                        )
 
                         setAdapterByData()
                     } else {
@@ -247,8 +254,25 @@ class SearchFragment : BaseModuleFragment(),
     }
 
     override fun onGetRecentSearchFromRealm(list: RealmResults<SearchRecentRealmData>) {
+        val searchList = arrayListOf<SearchRecentRealmData>()
+        list.forEach { item ->
+            searchList.add(item)
+        }
+        searchViewModel.searchRecentList.set(searchList)
+    }
 
-        activity?.toast(list.asJSON())
+    override fun onClickSearchRecentItem(list: SearchRecentRealmData) {
+        searchViewModel.apply {
+            keyword.set(list.keyword)
+            isLoading.set(true)
+            getSearchResultsData()
+
+            binding?.searchFinderContainer?.testDriveFinderEditText?.run {
+                val newValue = Editable.Factory.getInstance().newEditable(keyword.get())
+                text = newValue
+                setSelection(keyword.get()?.length!!)
+            }
+        }
     }
 
     private fun getImageViewFromChild(view: View): ImageView {

@@ -12,7 +12,6 @@ import io.realm.annotations.PrimaryKey
 open class SearchRecentRealmData  : RealmObject() {
 
     @PrimaryKey @JvmField
-    var id: Int = 0
     var keyword: String? = null
     var results: RealmList<ResultItemRealmData?>? = null
 
@@ -45,8 +44,6 @@ open class SearchRecentRealmData  : RealmObject() {
         }
 
         fun equals(user1: SearchRecentRealmData, user2: SearchRecentRealmData): Boolean {
-            if (user1.id != user2.id) return false
-
             if (user1.keyword != user2.keyword) return false
 
             if (user1.results == null || user2.results == null || user1.results != user2.results)
