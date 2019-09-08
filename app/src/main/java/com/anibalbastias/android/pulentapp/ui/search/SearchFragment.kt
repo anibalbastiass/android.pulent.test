@@ -10,14 +10,15 @@ import com.anibalbastias.android.pulentapp.appComponent
 import com.anibalbastias.android.pulentapp.base.module.getViewModel
 import com.anibalbastias.android.pulentapp.base.view.BaseModuleFragment
 import com.anibalbastias.android.pulentapp.databinding.FragmentSearchMusicBinding
+import com.anibalbastias.android.pulentapp.ui.search.interfaces.SearchListener
 import com.anibalbastias.android.pulentapp.ui.search.model.SearchMusicViewData
 import com.anibalbastias.android.pulentapp.ui.search.model.SearchResultItemViewData
 import com.anibalbastias.android.pulentapp.ui.search.viewmodel.SearchMusicViewModel
-import com.anibalbastias.android.pulentapp.util.applyFontForToolbarTitle
-import com.anibalbastias.android.pulentapp.util.implementObserver
-import com.anibalbastias.android.pulentapp.util.setNoArrowUpToolbar
+import com.anibalbastias.android.pulentapp.util.*
 
-class SearchFragment : BaseModuleFragment() {
+class SearchFragment : BaseModuleFragment(),
+    SearchListener,
+    ClearableEditText.Listener {
 
     override fun tagName(): String = this::class.java.simpleName
     override fun layoutId(): Int = R.layout.fragment_search_music
@@ -35,14 +36,30 @@ class SearchFragment : BaseModuleFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         binding = DataBindingUtil.bind<ViewDataBinding>(view) as FragmentSearchMusicBinding
+
+        binding?.searchViewModel = searchViewModel
+        binding?.finderCallback = this
+        binding?.clearableListener = this
         binding?.lifecycleOwner = this
 
         initViewModel()
         initToolbar()
 
-        searchViewModel.searchListDataView?.let {
-            setResultsData(it)
-        } ?: searchViewModel.getSeriesData()
+        searchViewModel.apply {
+            searchListDataView?.let {
+                setResultsData(it)
+            } ?: run {
+                isLoading.set(true)
+                getSearchResultsData()
+            }
+
+            // Set Swipe Refresh Layout
+            binding?.searchListSwipeRefreshLayout?.initSwipe {
+                // Reset offset
+                offset.set(0)
+                getSearchResultsData()
+            }
+        }
     }
 
     private fun initViewModel() {
@@ -50,6 +67,24 @@ class SearchFragment : BaseModuleFragment() {
             successBlock = { viewData -> setResultsData(viewData) },
             loadingBlock = { showLoadingView() },
             errorBlock = { showErrorView(it) })
+    }
+
+    override fun onSendActionByHeaderFinder() {
+        // Reset offset
+        searchViewModel.apply {
+            offset.set(0)
+            isLoading.set(true)
+            getSearchResultsData()
+        }
+    }
+
+    override fun didClearText() {
+        searchViewModel.apply {
+            keyword.set(String.empty())
+            offset.set(0)
+            isLoading.set(true)
+            getSearchResultsData()
+        }
     }
 
     private fun showErrorView(message: String?) {

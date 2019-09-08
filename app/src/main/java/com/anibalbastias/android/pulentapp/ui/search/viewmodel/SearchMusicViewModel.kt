@@ -65,7 +65,7 @@ class SearchMusicViewModel @Inject constructor(
     fun getSearchResultsLiveData(): MutableLiveData<Resource<SearchMusicViewData>> =
         getSearchMusicLiveData
 
-    fun getSeriesData() {
+    fun getSearchResultsData() {
         val params = mutableMapOf<String, String>()
         params[TERM_KEY] = keyword.get() ?: String.empty()
         params[OFFSET_KEY] = "${offset.get()}"
@@ -82,5 +82,9 @@ class SearchMusicViewModel @Inject constructor(
                 getSearchMusicLiveData, isLoading, isError
             ), params
         )
+    }
+
+    fun onKeywordTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+        keyword.set(s.toString())
     }
 }
