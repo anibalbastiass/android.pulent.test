@@ -40,6 +40,10 @@ class SearchRecentDao(realm: Realm?) {
         return mRealm.where(SearchRecentRealmData::class.java).equalTo("id", id).findFirst()!!
     }
 
+    fun loadByKeyword(keyword: String): SearchRecentRealmData {
+        return mRealm.where(SearchRecentRealmData::class.java).equalTo("keyword", keyword).findFirst()!!
+    }
+
     fun remove(item: RealmObject?) {
         mRealm.executeTransaction { item?.deleteFromRealm() }
     }

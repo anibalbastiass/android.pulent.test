@@ -119,11 +119,6 @@ class SearchFragment : BaseModuleFragment(),
         }
     }
 
-    private fun showErrorView(message: String?) {
-        searchViewModel.isLoading.set(false)
-        searchViewModel.isEmpty.set(true)
-    }
-
     private fun showLoadingView() {
         searchViewModel.isEmpty.set(false)
         searchViewModel.isLoading.set(true)
@@ -131,6 +126,7 @@ class SearchFragment : BaseModuleFragment(),
 
     private fun setResultsData(items: SearchMusicViewData) {
         searchViewModel.isLoading.set(false)
+        searchViewModel.isError.set(false)
         binding?.searchListSwipeRefreshLayout?.isRefreshing = false
 
         if (searchViewModel.isLoadingMorePages.compareAndSet(true, false)) {
@@ -248,6 +244,12 @@ class SearchFragment : BaseModuleFragment(),
         })
     }
 
+    private fun showErrorView(message: String?) {
+        searchViewModel.isError.set(true)
+        searchViewModel.isLoading.set(false)
+        showEmptyView()
+    }
+
     private fun showEmptyView() {
         searchViewModel.isEmpty.set(true)
         searchViewModel.loadRecentSearchListAsync(this)
@@ -265,13 +267,24 @@ class SearchFragment : BaseModuleFragment(),
         searchViewModel.apply {
             keyword.set(list.keyword)
             isLoading.set(true)
-            getSearchResultsData()
+
+            if (searchViewModel.isError.get()) {
+                getSearchResultDataFromRealm()
+            } else {
+                getSearchResultsData()
+            }
 
             binding?.searchFinderContainer?.testDriveFinderEditText?.run {
                 val newValue = Editable.Factory.getInstance().newEditable(keyword.get())
                 text = newValue
                 setSelection(keyword.get()?.length!!)
             }
+        }
+    }
+
+    private fun getSearchResultDataFromRealm() {
+        searchViewModel.apply {
+            setResultsData(getSearchResultFromRealm(keyword.get()))
         }
     }
 

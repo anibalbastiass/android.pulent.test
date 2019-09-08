@@ -1,6 +1,7 @@
 package com.anibalbastias.android.pulentapp.domain.search.model
 
 import com.anibalbastias.android.pulentapp.domain.base.model.RealmString
+import com.google.gson.annotations.SerializedName
 import io.realm.RealmList
 import io.realm.RealmObject
 import io.realm.annotations.PrimaryKey
@@ -12,6 +13,7 @@ import io.realm.annotations.PrimaryKey
 open class SearchRecentRealmData  : RealmObject() {
 
     @PrimaryKey @JvmField
+    @SerializedName("keyword")
     var keyword: String? = null
     var results: RealmList<ResultItemRealmData?>? = null
 

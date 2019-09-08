@@ -36,8 +36,12 @@ class SearchResultItemDao(realm: Realm?) {
         return mRealm.where(ResultItemRealmData::class.java).findAllAsync()
     }
 
-    fun loadBy(id: Long): RealmObject {
-        return mRealm.where(ResultItemRealmData::class.java).equalTo("trackId", id).findFirst()!!
+    fun loadBy(keyword: String): RealmObject {
+        return mRealm.where(ResultItemRealmData::class.java).equalTo("keyword", keyword).findFirst()!!
+    }
+
+    fun loadByKeyword(keyword: String): RealmResults<ResultItemRealmData> {
+        return mRealm.where(ResultItemRealmData::class.java).equalTo("keyword", keyword).findAll()!!
     }
 
     fun remove(item: RealmObject?) {

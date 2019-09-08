@@ -17,6 +17,8 @@ open class ResultItemRealmData : RealmObject() {
     var collectionId: Int? = null
     var kind: String? = null
 
+    var keyword: String? = null
+
     var trackName: String? = null
     var artworkUrl100: String? = null
     var trackTimeMillis: Int? = null

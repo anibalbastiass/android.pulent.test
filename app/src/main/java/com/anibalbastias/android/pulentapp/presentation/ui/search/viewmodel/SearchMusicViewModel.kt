@@ -11,6 +11,7 @@ import com.anibalbastias.android.pulentapp.base.view.BaseViewModel
 import com.anibalbastias.android.pulentapp.base.view.Resource
 import com.anibalbastias.android.pulentapp.base.view.ResourceState
 import com.anibalbastias.android.pulentapp.domain.search.db.RealmManager
+import com.anibalbastias.android.pulentapp.domain.search.model.ResultItemRealmData
 import com.anibalbastias.android.pulentapp.domain.search.model.SearchRecentRealmData
 import com.anibalbastias.android.pulentapp.presentation.context
 import com.anibalbastias.android.pulentapp.presentation.ui.search.mapper.SearchResultItemRealmMapper
@@ -21,7 +22,7 @@ import com.anibalbastias.android.pulentapp.presentation.util.empty
 import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
 import com.anibalbastias.android.pulentapp.presentation.ui.search.interfaces.GetSearchRecentsListener
-import java.util.*
+import io.realm.RealmList
 import kotlin.collections.ArrayList
 
 
@@ -132,17 +133,20 @@ class SearchMusicViewModel @Inject constructor(
 
     fun putRecentSearchItem(
         keyword: String,
-        itemsVD: java.util.ArrayList<SearchResultItemViewData?>
+        itemsVD: ArrayList<SearchResultItemViewData?>
     ) {
+
+        // Save Search
         val searchItem = SearchRecentRealmData()
         searchItem.keyword = keyword
 
-        val itemsResult = itemsVD.map {
-            searchResultItemRealmMapper.executeMapping(it)!!
+        val realmList = RealmList<ResultItemRealmData?>()
+        itemsVD.map { item ->
+            searchResultItemRealmMapper.keywordValue = keyword
+            realmList.add(searchResultItemRealmMapper.executeMapping(item))
         }
-//        searchItem.results = itemsResult
 
-        RealmManager.createSearchResultItemDao().save(itemsResult)
+        searchItem.results = realmList
         RealmManager.createSearchRecentDao().save(searchItem)
     }
 
@@ -156,5 +160,17 @@ class SearchMusicViewModel @Inject constructor(
     fun clearRecentSearchList(callback: GetSearchRecentsListener?) {
         RealmManager.createSearchRecentDao().removeAll()
         callback?.onGetRecentSearchFromRealm(null)
+    }
+
+    fun getSearchResultFromRealm(keyword: String?): SearchMusicViewData {
+        val result = RealmManager.createSearchRecentDao().loadByKeyword(keyword!!)
+
+        val itemsResult = arrayListOf<SearchResultItemViewData?>()
+        result.results?.forEach {
+            searchResultItemRealmMapper.inverseExecuteMapping(it)
+        }
+        return SearchMusicViewData(
+            resultCount = itemsResult.size,
+            results = itemsResult)
     }
 }
