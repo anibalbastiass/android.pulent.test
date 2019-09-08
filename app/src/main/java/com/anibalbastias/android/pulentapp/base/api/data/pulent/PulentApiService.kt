@@ -1,7 +1,7 @@
 package com.anibalbastias.android.pulentapp.base.api.data.pulent
 
 
-import com.anibalbastias.android.pulentapp.base.api.data.dataStoreFactory.common.search.SearchMusicData
+import com.anibalbastias.android.pulentapp.base.api.data.dataStoreFactory.search.model.SearchMusicData
 import io.reactivex.Flowable
 import retrofit2.http.GET
 import retrofit2.http.QueryMap

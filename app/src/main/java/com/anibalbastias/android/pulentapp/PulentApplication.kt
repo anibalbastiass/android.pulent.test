@@ -7,6 +7,15 @@ import com.anibalbastias.android.pulentapp.base.view.BaseModuleFragment
 import com.anibalbastias.android.pulentapp.component.ApplicationComponent
 import com.anibalbastias.android.pulentapp.component.DaggerApplicationComponent
 import com.anibalbastias.android.pulentapp.module.ApplicationModule
+import io.realm.Realm
+import io.realm.Realm.setDefaultConfiguration
+import io.realm.RealmConfiguration
+
+
+var context: PulentApplication? = null
+fun getAppContext(): PulentApplication {
+    return context!!
+}
 
 class PulentApplication : MultiDexApplication() {
 
@@ -23,7 +32,14 @@ class PulentApplication : MultiDexApplication() {
     override fun onCreate() {
         super.onCreate()
         appComponent().inject(this)
+        context = this
         appContext = this
+        setRealm()
+    }
+
+    private fun setRealm() {
+        // Initialize Realm (just once per application)
+        Realm.init(this)
     }
 }
 

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+
+        <variable
+                name="item"
+                type="com.anibalbastias.android.pulentapp.base.api.data.dataStoreFactory.search.model.SearchResultItemData" />
+
+        <variable
+                name="clickHandler"
+                type="com.anibalbastias.android.pulentapp.base.adapter.base.BaseBindClickHandler" />
+
+    </data>
+
+    <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+    </LinearLayout>
+</layout>

@@ -1,23 +1,34 @@
 package com.anibalbastias.android.pulentapp.ui.search.viewmodel
 
+import androidx.databinding.ObservableBoolean
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import com.anibalbastias.android.pulentapp.base.api.data.dataStoreFactory.common.search.SearchMusicData
-import com.anibalbastias.android.pulentapp.base.api.domain.series.usecase.GetSearchMusicUseCase
+import com.anibalbastias.android.pulentapp.base.api.domain.search.usecase.GetSearchMusicUseCase
+import com.anibalbastias.android.pulentapp.base.subscriber.BaseSubscriber
+import com.anibalbastias.android.pulentapp.base.view.BaseViewModel
 import com.anibalbastias.android.pulentapp.base.view.Resource
 import com.anibalbastias.android.pulentapp.base.view.ResourceState
-import io.reactivex.subscribers.DisposableSubscriber
+import com.anibalbastias.android.pulentapp.context
+import com.anibalbastias.android.pulentapp.ui.search.mapper.SearchViewDataMapper
+import com.anibalbastias.android.pulentapp.ui.search.model.SearchMusicViewData
 import javax.inject.Inject
 
-class SearchMusicViewModel @Inject constructor(private val getSearchMusicUseCase: GetSearchMusicUseCase) : ViewModel() {
+class SearchMusicViewModel @Inject constructor(
+    private val getSearchMusicUseCase: GetSearchMusicUseCase,
+    private val searchViewDataMapper: SearchViewDataMapper
+) : BaseViewModel() {
+
+    // region Observables
+    var isLoading: ObservableBoolean = ObservableBoolean(false)
+    var isError: ObservableBoolean = ObservableBoolean(false)
+    // endregion
 
     //region LiveData vars
-    private val getSearchMusicLiveData: MutableLiveData<Resource<SearchMusicData>> =
+    private val getSearchMusicLiveData: MutableLiveData<Resource<SearchMusicViewData>> =
         MutableLiveData()
-    private val pageDataLiveData: MutableLiveData<SearchMusicData> = MutableLiveData()
+    private val pageDataLiveData: MutableLiveData<SearchMusicViewData> = MutableLiveData()
     //endregion
 
-    var searchListDataView: SearchMusicData?
+    var searchListDataView: SearchMusicViewData?
         get() = pageDataLiveData.value
         set(value) {
             pageDataLiveData.value = value
@@ -32,35 +43,19 @@ class SearchMusicViewModel @Inject constructor(private val getSearchMusicUseCase
         getSearchMusicLiveData.value = Resource(ResourceState.DEFAULT, null, null)
     }
 
-    fun getPageLiveData(): MutableLiveData<Resource<SearchMusicData>> = getSearchMusicLiveData
+    fun getPageLiveData(): MutableLiveData<Resource<SearchMusicViewData>> = getSearchMusicLiveData
 
     fun getSeriesData() {
-        val map = mutableMapOf<String, String>()
-        map["term"] = "nightwish"
-        map["offset"] = "60"
-        map["mediaType"] = "music"
-        map["limit"] = "20"
-        map["country"] = "cl"
+        val params = mutableMapOf<String, String>()
+        params["term"] = "nightwish"
+        params["offset"] = "60"
+        params["mediaType"] = "music"
+        params["limit"] = "20"
+        params["country"] = "cl"
 
         getSearchMusicLiveData.postValue(Resource(ResourceState.LOADING, null, null))
-        getSearchMusicUseCase.execute(
-            GetSearchMusicSubscriber(),
-            map
-        )
-    }
-
-    inner class GetSearchMusicSubscriber : DisposableSubscriber<SearchMusicData>() {
-        override fun onComplete() {}
-
-        override fun onNext(t: SearchMusicData?) {
-            t.let {
-                getSearchMusicLiveData.postValue(Resource(ResourceState.SUCCESS, t, null))
-            }
-        }
-
-        override fun onError(t: Throwable?) {
-            t?.printStackTrace()
-            getSearchMusicLiveData.postValue(Resource(ResourceState.ERROR, null, null))
-        }
+        return getSearchMusicUseCase.execute(
+            BaseSubscriber(context?.applicationContext, this, searchViewDataMapper,
+                getSearchMusicLiveData, isLoading, isError), params)
     }
 }

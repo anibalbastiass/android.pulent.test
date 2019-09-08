@@ -7,13 +7,13 @@ import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.anibalbastias.android.pulentapp.R
 import com.anibalbastias.android.pulentapp.appComponent
-import com.anibalbastias.android.pulentapp.base.api.data.dataStoreFactory.common.search.SearchMusicData
-import com.anibalbastias.android.pulentapp.base.api.data.dataStoreFactory.series.model.SeriesItemData
 import com.anibalbastias.android.pulentapp.base.module.ViewModelFactory
 import com.anibalbastias.android.pulentapp.base.module.getViewModel
 import com.anibalbastias.android.pulentapp.base.view.BaseModuleFragment
 import com.anibalbastias.android.pulentapp.base.view.ResourceState
 import com.anibalbastias.android.pulentapp.databinding.FragmentSearchMusicBinding
+import com.anibalbastias.android.pulentapp.ui.search.model.SearchMusicViewData
+import com.anibalbastias.android.pulentapp.ui.search.model.SearchResultItemViewData
 import com.anibalbastias.android.pulentapp.ui.search.viewmodel.SearchMusicViewModel
 import com.anibalbastias.android.pulentapp.util.*
 import javax.inject.Inject
@@ -36,20 +36,6 @@ class SearchFragment : BaseModuleFragment() {
         setHasOptionsMenu(true)
     }
 
-    operator fun invoke(): SearchFragment {
-
-        val args = Bundle()
-        val fragment = SearchFragment()
-
-        fragment.run {
-            //            stockPathFile = stockPath
-        }
-
-        fragment.arguments = args
-        return fragment
-
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         binding = DataBindingUtil.bind<ViewDataBinding>(view) as FragmentSearchMusicBinding
         binding?.lifecycleOwner = this
@@ -70,7 +56,7 @@ class SearchFragment : BaseModuleFragment() {
         }
     }
 
-    private fun handlePageData(status: ResourceState, data: SearchMusicData?, message: String?) {
+    private fun handlePageData(status: ResourceState, data: SearchMusicViewData?, message: String?) {
         when (status) {
             ResourceState.DEFAULT -> {
             }
@@ -90,13 +76,14 @@ class SearchFragment : BaseModuleFragment() {
         binding?.searchLoader?.visible()
     }
 
-    private fun setPageData(data: SearchMusicData) {
+    private fun setPageData(data: SearchMusicViewData) {
         binding?.searchLoader?.gone()
+
         // Set Adapter
-//        setAdapter(data?.data?.results)
+        setAdapter(data.results)
     }
 
-    private fun setAdapter(results: List<SeriesItemData>?) {
+    private fun setAdapter(results: List<SearchResultItemViewData?>?) {
         binding?.searchListRecyclerView?.layoutManager = LinearLayoutManager(
             activity!!,
             LinearLayoutManager.VERTICAL, false

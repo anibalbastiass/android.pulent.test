@@ -1,5 +1,6 @@
-package com.anibalbastias.android.pulentapp.base.api.data.dataStoreFactory.common.search
+package com.anibalbastias.android.pulentapp.base.api.data.dataStoreFactory.search.model
 
+import com.anibalbastias.android.pulentapp.base.api.data.dataStoreFactory.common.TypeData
 import com.google.gson.annotations.SerializedName
 
 data class SearchMusicData(
@@ -9,4 +10,4 @@ data class SearchMusicData(
 
 	@field:SerializedName("results")
 	val results: List<SearchResultItemData?>? = null
-)
+) : TypeData()

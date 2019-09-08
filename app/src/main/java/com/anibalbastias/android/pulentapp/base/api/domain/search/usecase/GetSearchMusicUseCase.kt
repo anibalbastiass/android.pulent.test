@@ -1,10 +1,10 @@
-package com.anibalbastias.android.pulentapp.base.api.domain.series.usecase
+package com.anibalbastias.android.pulentapp.base.api.domain.search.usecase
 
 import au.com.carsales.apibaselib.domain.interactor.FlowableUseCase
-import com.anibalbastias.android.pulentapp.base.api.data.dataStoreFactory.common.search.SearchMusicData
+import com.anibalbastias.android.pulentapp.base.api.data.dataStoreFactory.search.model.SearchMusicData
 import com.anibalbastias.android.pulentapp.base.api.domain.base.executor.APIPostExecutionThread
 import com.anibalbastias.android.pulentapp.base.api.domain.base.executor.APIThreadExecutor
-import com.anibalbastias.android.pulentapp.base.api.domain.series.repository.ISeriesRepository
+import com.anibalbastias.android.pulentapp.base.api.domain.search.repository.ISeriesRepository
 import io.reactivex.Flowable
 import javax.inject.Inject
 

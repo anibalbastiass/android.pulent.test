@@ -1,4 +1,4 @@
-package com.anibalbastias.android.pulentapp.base.api.data.dataStoreFactory.common.search
+package com.anibalbastias.android.pulentapp.base.api.data.dataStoreFactory.search.model
 
 import com.google.gson.annotations.SerializedName
 

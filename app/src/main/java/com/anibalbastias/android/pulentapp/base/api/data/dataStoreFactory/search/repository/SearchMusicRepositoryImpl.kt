@@ -1,8 +1,8 @@
-package com.anibalbastias.android.pulentapp.base.api.data.dataStoreFactory.series.repository
+package com.anibalbastias.android.pulentapp.base.api.data.dataStoreFactory.search.repository
 
-import com.anibalbastias.android.pulentapp.base.api.data.dataStoreFactory.common.search.SearchMusicData
+import com.anibalbastias.android.pulentapp.base.api.data.dataStoreFactory.search.model.SearchMusicData
 import com.anibalbastias.android.pulentapp.base.api.data.pulent.PulentApiService
-import com.anibalbastias.android.pulentapp.base.api.domain.series.repository.ISeriesRepository
+import com.anibalbastias.android.pulentapp.base.api.domain.search.repository.ISeriesRepository
 import io.reactivex.Flowable
 import javax.inject.Inject
 import javax.inject.Singleton
