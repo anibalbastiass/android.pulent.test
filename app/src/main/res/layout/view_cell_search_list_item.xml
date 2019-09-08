@@ -25,6 +25,8 @@
             android:layout_marginEnd="16sp"
             android:background="@color/white"
             android:foreground="?android:attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
             android:onClick="@{(v) -> clickHandler.onClickView(v, item)}"
             card_view:cardCornerRadius="4dp"
             card_view:cardElevation="4dp"

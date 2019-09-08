@@ -10,6 +10,9 @@ import com.anibalbastias.android.pulentapp.presentation.module.ApplicationModule
 import io.realm.Realm
 
 var context: PulentApplication? = null
+fun getAppContext(): PulentApplication {
+    return context!!
+}
 
 class PulentApplication : MultiDexApplication() {
 

@@ -48,7 +48,6 @@ class SearchMusicViewModel @Inject constructor(
     //region LiveData vars
     private val getSearchMusicLiveData: MutableLiveData<Resource<SearchMusicViewData>> =
         MutableLiveData()
-    private val pageDataLiveData: MutableLiveData<SearchMusicViewData> = MutableLiveData()
 
     private val searchResultListLiveData: MutableLiveData<ArrayList<SearchResultItemViewData?>?> =
         MutableLiveData()
@@ -60,19 +59,9 @@ class SearchMusicViewModel @Inject constructor(
             searchResultListLiveData.value = value
         }
 
-    var searchListDataView: SearchMusicViewData?
-        get() = pageDataLiveData.value
-        set(value) {
-            pageDataLiveData.value = value
-        }
-
     override fun onCleared() {
         super.onCleared()
         getSearchMusicUseCase.dispose()
-    }
-
-    fun setPageDefaultState() {
-        getSearchMusicLiveData.value = Resource(ResourceState.DEFAULT, null, null)
     }
 
     fun getSearchResultsLiveData(): MutableLiveData<Resource<SearchMusicViewData>> =

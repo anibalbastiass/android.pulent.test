@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
+import androidx.lifecycle.SavedStateViewModelFactory
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.anibalbastias.android.pulentapp.R
@@ -12,6 +13,7 @@ import com.anibalbastias.android.pulentapp.presentation.util.adapter.base.BaseBi
 import com.anibalbastias.android.pulentapp.base.module.getViewModel
 import com.anibalbastias.android.pulentapp.base.view.BaseModuleFragment
 import com.anibalbastias.android.pulentapp.databinding.FragmentSearchMusicBinding
+import com.anibalbastias.android.pulentapp.presentation.getAppContext
 import com.anibalbastias.android.pulentapp.presentation.ui.search.adapter.SearchMusicAdapter
 import com.anibalbastias.android.pulentapp.presentation.ui.search.interfaces.SearchListener
 import com.anibalbastias.android.pulentapp.presentation.ui.search.model.SearchMusicViewData
@@ -41,10 +43,16 @@ class SearchFragment : BaseModuleFragment(),
         super.onCreate(savedInstanceState)
         appComponent().inject(this)
         searchViewModel = getViewModel(viewModelFactory)
+        navBaseViewModel = getViewModel(viewModelFactory)
+        sharedViewModel = activity!!.getViewModel(SavedStateViewModelFactory(getAppContext(), this))
         setHasOptionsMenu(true)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        setNavController(this@SearchFragment.view)
+
         binding = DataBindingUtil.bind<ViewDataBinding>(view) as FragmentSearchMusicBinding
 
         binding?.searchViewModel = searchViewModel
@@ -56,7 +64,7 @@ class SearchFragment : BaseModuleFragment(),
         initToolbar()
 
         searchViewModel.apply {
-            searchListDataView?.let {
+            getSearchResultsLiveData().value?.data?.let {
                 setResultsData(it)
             } ?: run {
                 isLoading.set(true)
@@ -216,7 +224,7 @@ class SearchFragment : BaseModuleFragment(),
     }
 
     override fun onClickView(view: View, item: SearchResultItemViewData) {
-
+        nextNavigate(SearchFragmentDirections.actionSearchFragmentToResultItemFragment().actionId)
     }
 
     private fun initToolbar() {
