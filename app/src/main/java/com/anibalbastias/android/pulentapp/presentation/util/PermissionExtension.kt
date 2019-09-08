@@ -8,12 +8,13 @@ import android.os.Build
 import android.os.Build.VERSION.SDK_INT
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import com.anibalbastias.android.pulentapp.presentation.ui.resultitem.ResultItemFragment.Companion.REQUEST_ID_MULTIPLE_PERMISSIONS
 
 
 /**
  * Created by anibalbastias on 2019-09-08.
  */
+
+val REQUEST_ID_MULTIPLE_PERMISSIONS = 1
 
 fun Activity.checkAndRequestPermissions(): Boolean {
     if (SDK_INT >= Build.VERSION_CODES.M) {

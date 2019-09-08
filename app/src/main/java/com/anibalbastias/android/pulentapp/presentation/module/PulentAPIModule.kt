@@ -3,6 +3,7 @@ package com.anibalbastias.android.pulentapp.presentation.module
 import com.anibalbastias.android.pulentapp.BuildConfig
 import com.anibalbastias.android.pulentapp.presentation.PulentApplication
 import com.anibalbastias.android.pulentapp.R
+import com.anibalbastias.android.pulentapp.data.pulent.PulentAPIGSONManager
 import com.anibalbastias.android.pulentapp.data.pulent.PulentApiService
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
@@ -56,7 +57,7 @@ class PulentAPIModule {
         .build()
 
     private fun makeGson(): Gson {
-        return GsonBuilder()
+        return PulentAPIGSONManager.createGsonBuilder()
             .setLenient()
             .setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
             .create()

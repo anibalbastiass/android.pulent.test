@@ -12,7 +12,7 @@
 
         <variable
                 name="recentSearchCallback"
-                type="com.anibalbastias.android.pulentapp.presentation.ui.search.interfaces.SearchRecentsListener" />
+                type="com.anibalbastias.android.pulentapp.presentation.ui.search.interfaces.SearchRecentListener" />
 
     </data>
 

@@ -3,7 +3,7 @@ package com.anibalbastias.android.pulentapp.base.view
 import androidx.databinding.ObservableBoolean
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
-import com.anibalbastias.android.pulentapp.presentation.ui.search.model.SearchResultItemViewData
+import com.anibalbastias.android.pulentapp.presentation.ui.search.model.CollectionResultItemViewData
 import javax.inject.Inject
 
 /**
@@ -21,10 +21,10 @@ class SharedViewModel @Inject constructor(val state: SavedStateHandle) : BaseVie
 
     var isLoading: ObservableBoolean = ObservableBoolean(false)
 
-    private val resultItemLiveData: MutableLiveData<SearchResultItemViewData> = savedStateHandle.getLiveData(RESULT_ITEM_KEY)
+    private val resultItemLiveData: MutableLiveData<CollectionResultItemViewData> = savedStateHandle.getLiveData(RESULT_ITEM_KEY)
 
-    var resultItemViewData: SearchResultItemViewData
-        get() = resultItemLiveData.value ?: SearchResultItemViewData()
+    var resultItemViewData: CollectionResultItemViewData
+        get() = resultItemLiveData.value ?: CollectionResultItemViewData()
         set(value) {
             resultItemLiveData.value = value
         }

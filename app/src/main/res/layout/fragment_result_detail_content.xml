@@ -14,30 +14,45 @@
     <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/white"
+            android:background="@color/backgroundColor"
             android:orientation="vertical">
 
         <TextView
-                android:id="@+id/textasd"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:gravity="center"
-                android:text="Hola Mundo"
-                app:layout_constraintBottom_toBottomOf="parent"
+                android:id="@+id/tracksTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:fontFamily="@font/opensans_semibold"
+                android:maxLines="2"
+                android:padding="20dp"
+                android:text="@{sharedViewModel.resultItemViewData.collectionName + `'s Tracks`}"
+                android:textColor="@color/normalTextColor"
+                android:textSize="16sp"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-        <!--        <ImageView-->
-        <!--                android:id="@+id/resultItemImage"-->
-        <!--                android:layout_width="200dp"-->
-        <!--                android:layout_height="200dp"-->
-        <!--                android:layout_gravity="center"-->
-        <!--                android:scaleType="fitCenter"-->
-        <!--                android:transitionName="secondTransitionName"-->
-        <!--                app:layout_constraintEnd_toEndOf="parent"-->
-        <!--                app:layout_constraintStart_toStartOf="parent"-->
-        <!--                tools:src="@drawable/placeholder" />-->
+        <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/tracksListRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:clipChildren="false"
+                android:clipToPadding="false"
+                android:scrollbars="vertical"
+                android:visibility="visible"
+                app:layout_constraintBottom_toTopOf="@+id/playerContainer"
+                app:layout_constraintTop_toBottomOf="@+id/tracksTitle"
+                tools:layout_editor_absoluteX="0dp"
+                tools:listitem="@layout/view_cell_search_track_item" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/playerContainer"
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
+                android:background="@color/white"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

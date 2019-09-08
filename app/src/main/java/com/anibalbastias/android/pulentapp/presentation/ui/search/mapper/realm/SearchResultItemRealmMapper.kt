@@ -1,8 +1,9 @@
-package com.anibalbastias.android.pulentapp.presentation.ui.search.mapper
+package com.anibalbastias.android.pulentapp.presentation.ui.search.mapper.realm
 
 import com.anibalbastias.android.pulentapp.domain.base.Mapper
 import com.anibalbastias.android.pulentapp.domain.search.model.ResultItemRealmData
-import com.anibalbastias.android.pulentapp.presentation.ui.search.model.SearchResultItemViewData
+import com.anibalbastias.android.pulentapp.presentation.ui.search.model.CollectionResultItemViewData
+import com.anibalbastias.android.pulentapp.presentation.ui.search.model.TrackResultItemViewData
 import javax.inject.Inject
 
 /**
@@ -10,45 +11,32 @@ import javax.inject.Inject
  */
 
 class SearchResultItemRealmMapper @Inject constructor() :
-    Mapper<ResultItemRealmData?, SearchResultItemViewData?> {
+    Mapper<ResultItemRealmData?, CollectionResultItemViewData?> {
 
     lateinit var keywordValue: String
 
-    override fun executeMapping(type: SearchResultItemViewData?): ResultItemRealmData? {
+    override fun executeMapping(type: CollectionResultItemViewData?): ResultItemRealmData? {
         return type?.let { item ->
             val resultItemData = ResultItemRealmData()
 
             resultItemData.apply {
                 keyword = keywordValue
                 artworkUrl100 = item.artworkUrl100
-                trackTimeMillis = item.trackTimeMillis
                 country = item.country
-                previewUrl = item.previewUrl
                 artistId = item.artistId
-                trackName = item.trackName
                 collectionName = item.collectionName
                 artistViewUrl = item.artistViewUrl
-                discNumber = item.discNumber
                 trackCount = item.trackCount
                 artworkUrl30 = item.artworkUrl30
                 wrapperType = item.wrapperType
                 currency = item.currency
                 collectionId = item.collectionId
-                isStreamable = item.isStreamable
-                trackExplicitness = item.trackExplicitness
                 collectionViewUrl = item.collectionViewUrl
-                trackNumber = item.trackNumber
                 releaseDate = item.releaseDate
-                kind = item.kind
-                trackId = item.trackId!!
                 collectionPrice = item.collectionPrice
-                discCount = item.discCount
                 primaryGenreName = item.primaryGenreName
-                trackPrice = item.trackPrice
                 collectionExplicitness = item.collectionExplicitness
-                trackViewUrl = item.trackViewUrl
                 artworkUrl60 = item.artworkUrl60
-                trackCensoredName = item.trackCensoredName
                 artistName = item.artistName
                 collectionCensoredName = item.collectionCensoredName
             }
@@ -56,40 +44,27 @@ class SearchResultItemRealmMapper @Inject constructor() :
         }
     }
 
-    fun inverseExecuteMapping(type: ResultItemRealmData?): SearchResultItemViewData? {
+    fun inverseExecuteMapping(type: ResultItemRealmData?): CollectionResultItemViewData? {
         return type?.let { item ->
-            val resultItemData = SearchResultItemViewData()
+            val resultItemData = CollectionResultItemViewData()
 
             resultItemData.apply {
                 artworkUrl100 = item.artworkUrl100
-                trackTimeMillis = item.trackTimeMillis
                 country = item.country
-                previewUrl = item.previewUrl
                 artistId = item.artistId
-                trackName = item.trackName
                 collectionName = item.collectionName
                 artistViewUrl = item.artistViewUrl
-                discNumber = item.discNumber
                 trackCount = item.trackCount
                 artworkUrl30 = item.artworkUrl30
                 wrapperType = item.wrapperType
                 currency = item.currency
                 collectionId = item.collectionId
-                isStreamable = item.isStreamable
-                trackExplicitness = item.trackExplicitness
                 collectionViewUrl = item.collectionViewUrl
-                trackNumber = item.trackNumber
                 releaseDate = item.releaseDate
-                kind = item.kind
-                trackId = item.trackId!!
                 collectionPrice = item.collectionPrice
-                discCount = item.discCount
                 primaryGenreName = item.primaryGenreName
-                trackPrice = item.trackPrice
                 collectionExplicitness = item.collectionExplicitness
-                trackViewUrl = item.trackViewUrl
                 artworkUrl60 = item.artworkUrl60
-                trackCensoredName = item.trackCensoredName
                 artistName = item.artistName
                 collectionCensoredName = item.collectionCensoredName
             }

@@ -1,20 +1,20 @@
 package com.anibalbastias.android.pulentapp.presentation.ui.search.mapper
 
-import com.anibalbastias.android.pulentapp.data.dataStoreFactory.search.model.SearchResultItemData
+import com.anibalbastias.android.pulentapp.data.dataStoreFactory.search.model.TrackResultItemData
 import com.anibalbastias.android.pulentapp.domain.base.Mapper
-import com.anibalbastias.android.pulentapp.presentation.ui.search.model.SearchResultItemViewData
+import com.anibalbastias.android.pulentapp.presentation.ui.search.model.TrackResultItemViewData
 import javax.inject.Inject
 
 /**
  * Created by anibalbastias on 2019-09-07.
  */
 
-class SearchResultItemViewDataMapper @Inject constructor() :
-    Mapper<SearchResultItemViewData?, SearchResultItemData?> {
+class TrackResultItemViewDataMapper @Inject constructor() :
+    Mapper<TrackResultItemViewData?, TrackResultItemData?> {
 
-    override fun executeMapping(type: SearchResultItemData?): SearchResultItemViewData? {
+    override fun executeMapping(type: TrackResultItemData?): TrackResultItemViewData? {
         return type?.let { item ->
-            return SearchResultItemViewData(
+            return TrackResultItemViewData(
                 artworkUrl100 = item.artworkUrl100,
                 trackTimeMillis = item.trackTimeMillis,
                 country = item.country,

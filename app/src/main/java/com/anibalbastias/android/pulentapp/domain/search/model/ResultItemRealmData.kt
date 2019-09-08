@@ -22,7 +22,6 @@ open class ResultItemRealmData : RealmObject() {
     var trackName: String? = null
     var artworkUrl100: String? = null
     var trackTimeMillis: Int? = null
-    var country: String? = null
     var previewUrl: String? = null
     var collectionName: String? = null
     var artistViewUrl: String? = null
@@ -37,16 +36,20 @@ open class ResultItemRealmData : RealmObject() {
     var collectionViewUrl: String? = null
     var trackNumber: Int? = null
     var releaseDate: String? = null
-    var collectionPrice: Double? = null
+    var collectionPrice: Int? = null
     var discCount: Int? = null
     var primaryGenreName: String? = null
     var trackPrice: Double? = null
-    var collectionExplicitness: String? = null
     var trackViewUrl: String? = null
     var artworkUrl60: String? = null
     var trackCensoredName: String? = null
     var artistName: String? = null
     var collectionCensoredName: String? = null
+    var country: String? = null
+    var copyright: String? = null
+    var amgArtistId: Int? = null
+    var collectionType: String? = null
+    var collectionExplicitness: String? = null
 
     var trackList: RealmList<RealmString>? = null
 

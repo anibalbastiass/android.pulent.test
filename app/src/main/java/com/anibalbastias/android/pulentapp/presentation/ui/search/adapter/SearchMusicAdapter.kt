@@ -6,20 +6,20 @@ import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.RecyclerView
 import com.anibalbastias.android.pulentapp.R
+import com.anibalbastias.android.pulentapp.presentation.ui.search.model.CollectionResultItemViewData
 import com.anibalbastias.android.pulentapp.presentation.util.adapter.base.BaseBindClickHandler
 import com.anibalbastias.android.pulentapp.presentation.util.adapter.base.BaseBindViewHolder
 import com.anibalbastias.android.pulentapp.presentation.util.adapter.customBase.BaseAdapter
-import com.anibalbastias.android.pulentapp.presentation.ui.search.model.SearchResultItemViewData
 import javax.inject.Inject
 
 /**
  * Created by anibalbastias on 2019-09-08.
  */
 
-class SearchMusicAdapter @Inject constructor() : BaseAdapter<SearchResultItemViewData>() {
+class SearchMusicAdapter @Inject constructor() : BaseAdapter<CollectionResultItemViewData>() {
 
-    override var items: MutableList<SearchResultItemViewData?> = arrayListOf()
-    var clickHandler: BaseBindClickHandler<SearchResultItemViewData>? = null
+    override var items: MutableList<CollectionResultItemViewData?> = arrayListOf()
+    var clickHandler: BaseBindClickHandler<CollectionResultItemViewData>? = null
 
     //region Unused methods
     override fun createHeaderViewHolder(parent: ViewGroup): RecyclerView.ViewHolder? = null
@@ -34,7 +34,7 @@ class SearchMusicAdapter @Inject constructor() : BaseAdapter<SearchResultItemVie
             inflater,
             R.layout.view_cell_search_list_item, parent, false
         )
-        return BaseBindViewHolder<SearchResultItemViewData>(binding)
+        return BaseBindViewHolder<CollectionResultItemViewData>(binding)
     }
 
     override fun createLoadingViewHolder(parent: ViewGroup): RecyclerView.ViewHolder? {
@@ -45,7 +45,7 @@ class SearchMusicAdapter @Inject constructor() : BaseAdapter<SearchResultItemVie
     }
 
     override fun bindItemViewHolder(viewHolder: RecyclerView.ViewHolder, position: Int) {
-        val holder = viewHolder as BaseBindViewHolder<SearchResultItemViewData>
+        val holder = viewHolder as BaseBindViewHolder<CollectionResultItemViewData>
         items[position]?.let {
             holder.bind(it, clickHandler)
         }
@@ -60,10 +60,10 @@ class SearchMusicAdapter @Inject constructor() : BaseAdapter<SearchResultItemVie
 
     override fun addLoadingFooter() {
         isLoadingAdded = true
-        add(SearchResultItemViewData())
+        add(CollectionResultItemViewData())
     }
 
-    fun addDataPagination(listItemViewModel: MutableList<SearchResultItemViewData?>) {
+    fun addDataPagination(listItemViewModel: MutableList<CollectionResultItemViewData?>) {
         addAll(listItemViewModel)
         notifyDataSetChanged()
     }

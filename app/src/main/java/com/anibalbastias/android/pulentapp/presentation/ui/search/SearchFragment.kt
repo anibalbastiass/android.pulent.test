@@ -18,7 +18,6 @@ import com.anibalbastias.android.pulentapp.presentation.getAppContext
 import com.anibalbastias.android.pulentapp.presentation.ui.search.adapter.SearchMusicAdapter
 import com.anibalbastias.android.pulentapp.presentation.ui.search.interfaces.SearchListener
 import com.anibalbastias.android.pulentapp.presentation.ui.search.model.SearchMusicViewData
-import com.anibalbastias.android.pulentapp.presentation.ui.search.model.SearchResultItemViewData
 import com.anibalbastias.android.pulentapp.presentation.ui.search.viewmodel.SearchMusicViewModel
 import com.anibalbastias.android.pulentapp.presentation.util.*
 import com.anibalbastias.android.pulentapp.presentation.util.widget.ClearableEditText
@@ -31,16 +30,17 @@ import androidx.core.view.ViewCompat
 import com.anibalbastias.android.pulentapp.R
 import com.anibalbastias.android.pulentapp.domain.search.model.SearchRecentRealmData
 import com.anibalbastias.android.pulentapp.presentation.ui.search.interfaces.GetSearchRecentsListener
-import com.anibalbastias.android.pulentapp.presentation.ui.search.interfaces.SearchRecentsListener
+import com.anibalbastias.android.pulentapp.presentation.ui.search.interfaces.SearchRecentListener
+import com.anibalbastias.android.pulentapp.presentation.ui.search.model.CollectionResultItemViewData
 import io.realm.RealmResults
 
 
 class SearchFragment : BaseModuleFragment(),
     SearchListener,
     ClearableEditText.Listener,
-    BaseBindClickHandler<SearchResultItemViewData>,
+    BaseBindClickHandler<CollectionResultItemViewData>,
     GetSearchRecentsListener,
-    SearchRecentsListener<SearchResultItemViewData> {
+    SearchRecentListener<CollectionResultItemViewData> {
 
     override fun tagName(): String = this::class.java.simpleName
     override fun layoutId(): Int = R.layout.fragment_search_music
@@ -146,7 +146,7 @@ class SearchFragment : BaseModuleFragment(),
         } else {
             if (items.results?.isNotEmpty()!!) {
                 // Set data
-                searchViewModel.searchResultListPaginationViewData = items.results
+                searchViewModel.searchCollectionResultListPaginationViewData = items.results
 
                 items.results.let { itemsVD ->
                     binding?.searchListRecyclerView?.visible()
@@ -168,7 +168,7 @@ class SearchFragment : BaseModuleFragment(),
                     }
                 }
             } else {
-                searchViewModel.searchResultListPaginationViewData?.apply {
+                searchViewModel.searchCollectionResultListPaginationViewData?.apply {
                     clear()
 
                     searchMusicAdapter.clickHandler = this@SearchFragment
@@ -223,7 +223,7 @@ class SearchFragment : BaseModuleFragment(),
                     if (!searchViewModel.isLoadingMorePages.get()) {
                         if (visibleItemCount!! + firstVisibleItemPosition >= totalItemCount!! && firstVisibleItemPosition >= 0) {
                             searchViewModel.apply {
-                                lastPosition.set(searchResultListPaginationViewData?.size!!)
+                                lastPosition.set(searchCollectionResultListPaginationViewData?.size!!)
 
                                 if (searchViewModel.lastPosition.get() >= SearchMusicViewModel.PAGE_SIZE) {
                                     isLoadingMorePages.set(true)
@@ -299,7 +299,7 @@ class SearchFragment : BaseModuleFragment(),
         return (ll2?.getChildAt(0) as? ImageView)!!
     }
 
-    override fun onClickView(view: View, item: SearchResultItemViewData) {
+    override fun onClickView(view: View, item: CollectionResultItemViewData) {
         val extras = FragmentNavigatorExtras(
             getImageViewFromChild(view) to "secondTransitionName"
         )

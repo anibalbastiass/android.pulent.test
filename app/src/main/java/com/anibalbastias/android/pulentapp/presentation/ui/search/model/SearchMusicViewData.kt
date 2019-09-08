@@ -10,5 +10,5 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 data class SearchMusicViewData(
     val resultCount: Int? = null,
-    val results: ArrayList<SearchResultItemViewData?>? = null
+    val results: ArrayList<CollectionResultItemViewData?>? = null
 ) : Parcelable

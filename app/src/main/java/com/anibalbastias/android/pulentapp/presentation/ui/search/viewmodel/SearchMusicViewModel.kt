@@ -14,14 +14,15 @@ import com.anibalbastias.android.pulentapp.domain.search.db.RealmManager
 import com.anibalbastias.android.pulentapp.domain.search.model.ResultItemRealmData
 import com.anibalbastias.android.pulentapp.domain.search.model.SearchRecentRealmData
 import com.anibalbastias.android.pulentapp.presentation.context
-import com.anibalbastias.android.pulentapp.presentation.ui.search.mapper.SearchResultItemRealmMapper
+import com.anibalbastias.android.pulentapp.presentation.ui.search.mapper.realm.SearchResultItemRealmMapper
 import com.anibalbastias.android.pulentapp.presentation.ui.search.mapper.SearchViewDataMapper
 import com.anibalbastias.android.pulentapp.presentation.ui.search.model.SearchMusicViewData
-import com.anibalbastias.android.pulentapp.presentation.ui.search.model.SearchResultItemViewData
 import com.anibalbastias.android.pulentapp.presentation.util.empty
 import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
 import com.anibalbastias.android.pulentapp.presentation.ui.search.interfaces.GetSearchRecentsListener
+import com.anibalbastias.android.pulentapp.presentation.ui.search.model.CollectionResultItemViewData
+import com.anibalbastias.android.pulentapp.presentation.ui.search.model.TrackResultItemViewData
 import io.realm.RealmList
 import kotlin.collections.ArrayList
 
@@ -69,14 +70,23 @@ class SearchMusicViewModel @Inject constructor(
     private val getSearchMusicLiveData: MutableLiveData<Resource<SearchMusicViewData>> =
         MutableLiveData()
 
-    private val searchResultListLiveData: MutableLiveData<ArrayList<SearchResultItemViewData?>?> =
+    private val collectionsResultListLiveData: MutableLiveData<ArrayList<CollectionResultItemViewData?>?> =
+        MutableLiveData()
+
+    private val tracksResultListLiveData: MutableLiveData<ArrayList<TrackResultItemViewData?>?> =
         MutableLiveData()
     //endregion
 
-    var searchResultListPaginationViewData: ArrayList<SearchResultItemViewData?>?
-        get() = searchResultListLiveData.value
+    var searchCollectionResultListPaginationViewData: ArrayList<CollectionResultItemViewData?>?
+        get() = collectionsResultListLiveData.value
         set(value) {
-            searchResultListLiveData.value = value
+            collectionsResultListLiveData.value = value
+        }
+
+    var searchTrackResultListPaginationViewData: ArrayList<TrackResultItemViewData?>?
+        get() = tracksResultListLiveData.value
+        set(value) {
+            tracksResultListLiveData.value = value
         }
 
     override fun onCleared() {
@@ -139,25 +149,25 @@ class SearchMusicViewModel @Inject constructor(
 
         if (!isFirstPageLoad!!) {
             //Pagination Loaded
-            val oldList = searchResultListPaginationViewData
+            val oldList = searchCollectionResultListPaginationViewData
 
             t.results?.let {
                 if (!it.filterNotNull().isNullOrEmpty()) {
                     val addSuccessful = oldList?.addAll(it.toList())
                     if (addSuccessful == true) {
-                        searchResultListPaginationViewData = oldList
+                        searchCollectionResultListPaginationViewData = oldList
                     }
                 }
             }
         } else {
             //FirstPage Loaded
-            searchResultListPaginationViewData = t.results
+            searchCollectionResultListPaginationViewData = t.results
         }
     }
 
     fun putRecentSearchItem(
         keyword: String,
-        itemsVD: ArrayList<SearchResultItemViewData?>
+        itemsVD: ArrayList<CollectionResultItemViewData?>
     ) {
 
         // Save Search
@@ -189,7 +199,7 @@ class SearchMusicViewModel @Inject constructor(
     fun getSearchResultFromRealm(keyword: String?): SearchMusicViewData {
         val result = RealmManager.createSearchRecentDao().loadByKeyword(keyword!!)
 
-        val itemsResult = arrayListOf<SearchResultItemViewData?>()
+        val itemsResult = arrayListOf<CollectionResultItemViewData?>()
         result.results?.forEach {
             searchResultItemRealmMapper.inverseExecuteMapping(it)
         }

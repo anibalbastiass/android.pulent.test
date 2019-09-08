@@ -9,7 +9,7 @@ import io.realm.RealmResults
  * Created by anibalbastias on 2019-08-13.
  */
 
-interface SearchRecentsListener<T> : BaseBindClickHandler<T> {
+interface SearchRecentListener<T> : BaseBindClickHandler<T> {
 
     override fun onClickView(view: View, item: T)
     fun onClickSearchRecentItem(list: SearchRecentRealmData)
