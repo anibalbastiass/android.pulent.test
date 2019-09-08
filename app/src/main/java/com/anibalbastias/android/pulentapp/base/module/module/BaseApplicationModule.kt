@@ -1,8 +1,8 @@
 package com.anibalbastias.android.pulentapp.base.module.module
 
-import com.anibalbastias.android.pulentapp.PulentApplication
-import com.anibalbastias.android.pulentapp.base.api.domain.base.executor.APIPostExecutionThread
-import com.anibalbastias.android.pulentapp.base.api.domain.base.executor.APIThreadExecutor
+import com.anibalbastias.android.pulentapp.presentation.PulentApplication
+import com.anibalbastias.android.pulentapp.domain.base.executor.APIPostExecutionThread
+import com.anibalbastias.android.pulentapp.domain.base.executor.APIThreadExecutor
 import com.anibalbastias.android.pulentapp.base.module.executor.JobExecutor
 import com.anibalbastias.android.pulentapp.base.module.executor.UIThread
 import dagger.Module

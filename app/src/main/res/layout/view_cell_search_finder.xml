@@ -8,15 +8,15 @@
 
         <variable
                 name="searchViewModel"
-                type="com.anibalbastias.android.pulentapp.ui.search.viewmodel.SearchMusicViewModel" />
+                type="com.anibalbastias.android.pulentapp.presentation.ui.search.viewmodel.SearchMusicViewModel" />
 
         <variable
                 name="finderCallback"
-                type="com.anibalbastias.android.pulentapp.ui.search.interfaces.SearchListener" />
+                type="com.anibalbastias.android.pulentapp.presentation.ui.search.interfaces.SearchListener" />
 
         <variable
                 name="clearableListener"
-                type="com.anibalbastias.android.pulentapp.util.ClearableEditText.Listener" />
+                type="com.anibalbastias.android.pulentapp.presentation.util.widget.ClearableEditText.Listener" />
 
     </data>
 
@@ -28,7 +28,7 @@
             android:gravity="center"
             android:orientation="horizontal">
 
-        <com.anibalbastias.android.pulentapp.util.ClearableEditText
+        <com.anibalbastias.android.pulentapp.presentation.util.widget.ClearableEditText
                 android:id="@+id/testDriveFinderEditText"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"

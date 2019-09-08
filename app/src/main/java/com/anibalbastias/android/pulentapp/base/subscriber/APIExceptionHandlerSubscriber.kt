@@ -4,8 +4,7 @@ import android.content.Context
 import io.reactivex.subscribers.DisposableSubscriber
 
 /**
- * Created by Dan on 26, June, 2019
- * Copyright (c) 2019 Carsales. All rights reserved.
+ * Created by anibal.bastias on 26, June, 2019
  *
  * Transform data error to API error view data
  */

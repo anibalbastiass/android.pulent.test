@@ -8,11 +8,11 @@
 
         <variable
                 name="item"
-                type="com.anibalbastias.android.pulentapp.ui.search.model.SearchResultItemViewData" />
+                type="com.anibalbastias.android.pulentapp.presentation.ui.search.model.SearchResultItemViewData" />
 
         <variable
                 name="clickHandler"
-                type="com.anibalbastias.android.pulentapp.base.adapter.base.BaseBindClickHandler" />
+                type="com.anibalbastias.android.pulentapp.presentation.util.adapter.base.BaseBindClickHandler" />
 
     </data>
 

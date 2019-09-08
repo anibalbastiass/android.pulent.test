@@ -1,6 +1,6 @@
 package com.anibalbastias.android.pulentapp.base.module.executor
 
-import com.anibalbastias.android.pulentapp.base.api.domain.base.executor.APIThreadExecutor
+import com.anibalbastias.android.pulentapp.domain.base.executor.APIThreadExecutor
 import java.util.concurrent.LinkedBlockingQueue
 import java.util.concurrent.ThreadFactory
 import java.util.concurrent.ThreadPoolExecutor
