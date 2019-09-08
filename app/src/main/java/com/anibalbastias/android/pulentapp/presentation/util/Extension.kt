@@ -82,6 +82,14 @@ fun ImageView.loadImageWithoutPlaceholder(url: String) =
         .skipMemoryCache(true)
         .into(this)
 
+fun ImageView.loadImageWithoutPlaceholderCenterCrop(url: String) =
+    GlideApp.with(context)
+        .load(url)
+        .centerCrop()
+        .diskCacheStrategy(DiskCacheStrategy.ALL)
+        .skipMemoryCache(true)
+        .into(this)
+
 fun isTablet(context: Context): Boolean = try {
     context.resources.getBoolean(R.bool.isTablet)
 } catch (ex: Exception) {

@@ -26,7 +26,7 @@
             android:id="@+id/resultItemFragment"
             android:name="com.anibalbastias.android.pulentapp.presentation.ui.resultitem.ResultItemFragment"
             android:label="ResultItemFragment"
-            tools:layout="@layout/fragment_result">
+            tools:layout="@layout/fragment_result_detail_content">
 
     </fragment>
 

@@ -1,21 +1,20 @@
 package com.anibalbastias.android.pulentapp.presentation.ui.resultitem
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.SavedStateViewModelFactory
-import androidx.transition.ChangeBounds
 import androidx.transition.TransitionInflater
 import com.anibalbastias.android.pulentapp.R
 import com.anibalbastias.android.pulentapp.base.module.getViewModel
 import com.anibalbastias.android.pulentapp.presentation.appComponent
 import com.anibalbastias.android.pulentapp.base.view.BaseModuleFragment
-import com.anibalbastias.android.pulentapp.databinding.FragmentResultBinding
+import com.anibalbastias.android.pulentapp.databinding.FragmentResultDetailMainBinding
 import com.anibalbastias.android.pulentapp.presentation.getAppContext
-import com.anibalbastias.android.pulentapp.presentation.util.setImageUrl
+import android.provider.MediaStore.Audio
+import com.anibalbastias.android.pulentapp.presentation.service.MediaPlayerService
+
 
 /**
  * Created by anibalbastias on 2019-09-08.
@@ -24,9 +23,18 @@ import com.anibalbastias.android.pulentapp.presentation.util.setImageUrl
 class ResultItemFragment : BaseModuleFragment() {
 
     override fun tagName(): String = this::class.java.simpleName
-    override fun layoutId(): Int = R.layout.fragment_result
+    override fun layoutId(): Int = R.layout.fragment_result_detail_main
 
-    private lateinit var binding: FragmentResultBinding
+    private lateinit var binding: FragmentResultDetailMainBinding
+
+    companion object {
+        val REQUEST_ID_MULTIPLE_PERMISSIONS = 1
+    }
+
+    private val player: MediaPlayerService? = null
+    var serviceBound = false
+    var audioList: ArrayList<Audio>? = null
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,9 +52,8 @@ class ResultItemFragment : BaseModuleFragment() {
 
         setNavController(this@ResultItemFragment.view)
 
-        binding = DataBindingUtil.bind<ViewDataBinding>(view) as FragmentResultBinding
+        binding = DataBindingUtil.bind<ViewDataBinding>(view) as FragmentResultDetailMainBinding
+        binding.sharedViewModel = sharedViewModel
         binding.lifecycleOwner = this
-
-        binding.resultItemImage.setImageUrl(sharedViewModel.resultItemViewData.artworkUrl100)
     }
 }

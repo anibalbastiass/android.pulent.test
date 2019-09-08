@@ -34,11 +34,14 @@ class SearchMusicViewModel @Inject constructor(
 
     companion object {
         const val PAGE_SIZE = 20
-        private const val URL_FORMAT = "%s&offset=%d&mediaType=%s&limit=%d&country=%s"
+        private const val URL_FORMAT = "%s&offset=%d&mediaType=%s&limit=%d&country=%s&entity=%s&sort=recent"
+//        private const val URL_FORMAT = "%s&offset=%d&&limit=%d&country=%s&entity=%s&sort=recent"
         private const val SEARCH_URL = "search?term="
 
         private const val MEDIA_TYPE = "music"
         private const val COUNTRY = "cl"
+        private const val ALBUM = "album"
+        private const val SONG = "song"
     }
 
 
@@ -84,11 +87,32 @@ class SearchMusicViewModel @Inject constructor(
     fun getSearchResultsLiveData(): MutableLiveData<Resource<SearchMusicViewData>> =
         getSearchMusicLiveData
 
-    fun getSearchResultsData(isPaging: Boolean? = false) {
+    fun getSearchAlbumsResultsData(isPaging: Boolean? = false) {
         nextPageURL.set(
             String.format(
                 URL_FORMAT,
-                SEARCH_URL + keyword.get(), offset.get(), MEDIA_TYPE, PAGE_SIZE, COUNTRY
+                SEARCH_URL + keyword.get(), offset.get(), MEDIA_TYPE, PAGE_SIZE, COUNTRY, ALBUM
+            )
+        )
+
+        if (!isPaging!!) {
+            isLoading.set(true)
+            getSearchMusicLiveData.postValue(Resource(ResourceState.LOADING, null, null))
+        }
+
+        return getSearchMusicUseCase.execute(
+            BaseSubscriber(
+                context?.applicationContext, this, searchViewDataMapper,
+                getSearchMusicLiveData, isLoading, isError
+            ), nextPageURL.get()
+        )
+    }
+
+    fun getSearchSongsResultsData(isPaging: Boolean? = false) {
+        nextPageURL.set(
+            String.format(
+                URL_FORMAT,
+                SEARCH_URL + keyword.get(), offset.get(), MEDIA_TYPE, PAGE_SIZE, COUNTRY, SONG
             )
         )
 

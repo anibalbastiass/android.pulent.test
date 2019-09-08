@@ -82,14 +82,14 @@ class SearchFragment : BaseModuleFragment(),
                 setResultsData(it)
             } ?: run {
                 isLoading.set(true)
-                getSearchResultsData()
+                getSearchAlbumsResultsData()
             }
 
             // Set Swipe Refresh Layout
             binding?.searchListSwipeRefreshLayout?.initSwipe {
                 // Reset offset
                 offset.set(0)
-                getSearchResultsData()
+                getSearchAlbumsResultsData()
             }
         }
     }
@@ -106,7 +106,7 @@ class SearchFragment : BaseModuleFragment(),
         searchViewModel.apply {
             offset.set(0)
             isLoading.set(true)
-            getSearchResultsData()
+            getSearchAlbumsResultsData()
         }
     }
 
@@ -115,7 +115,7 @@ class SearchFragment : BaseModuleFragment(),
             keyword.set(String.empty())
             offset.set(0)
             isLoading.set(true)
-            getSearchResultsData()
+            getSearchAlbumsResultsData()
         }
     }
 
@@ -234,7 +234,7 @@ class SearchFragment : BaseModuleFragment(),
 
                                     // Fetch next list
                                     isLoading.set(false)
-                                    getSearchResultsData(isPaging = true)
+                                    getSearchAlbumsResultsData(isPaging = true)
                                 }
                             }
                         }
@@ -271,7 +271,7 @@ class SearchFragment : BaseModuleFragment(),
             if (searchViewModel.isError.get()) {
                 getSearchResultDataFromRealm()
             } else {
-                getSearchResultsData()
+                getSearchAlbumsResultsData()
             }
 
             binding?.searchFinderContainer?.testDriveFinderEditText?.run {

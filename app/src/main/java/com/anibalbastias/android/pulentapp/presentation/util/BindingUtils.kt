@@ -19,6 +19,13 @@ fun ImageView.setImageUrl(imageUrl: String?) {
     }
 }
 
+@BindingAdapter("setImageUrlCenterCrop")
+fun ImageView.setImageUrlCenterCrop(imageUrl: String?) {
+    imageUrl?.let {
+        loadImageWithoutPlaceholderCenterCrop(imageUrl)
+    }
+}
+
 @BindingAdapter("sendEditTextAction")
 fun EditText.sendEditTextAction(callback: SearchListener?) {
     setOnEditorActionListener { view, actionId, event ->
