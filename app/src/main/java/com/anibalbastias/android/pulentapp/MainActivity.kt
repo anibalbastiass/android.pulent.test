@@ -20,8 +20,9 @@ class MainActivity : AppCompatActivity() {
         appComponent().inject(this)
 
         if (savedInstanceState == null) {
+            entryFragment = EntryFragment.newInstance()
             supportFragmentManager.beginTransaction()
-                .replace(R.id.container, EntryFragment.newInstance())
+                .replace(R.id.container, entryFragment)
                 .commitNow()
         }
     }

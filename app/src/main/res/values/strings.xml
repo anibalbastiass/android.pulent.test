@@ -2,4 +2,6 @@
     <string name="app_name">Pulent App</string>
     <string name="series_toolbar">Series</string>
     <string name="generic_error_message">Error</string>
+    <string name="action_send">Send</string>
+    <string name="td_inventory_search_title">Search</string>
 </resources>

@@ -7,24 +7,21 @@ import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.anibalbastias.android.pulentapp.R
 import com.anibalbastias.android.pulentapp.appComponent
-import com.anibalbastias.android.pulentapp.base.module.ViewModelFactory
 import com.anibalbastias.android.pulentapp.base.module.getViewModel
 import com.anibalbastias.android.pulentapp.base.view.BaseModuleFragment
-import com.anibalbastias.android.pulentapp.base.view.ResourceState
 import com.anibalbastias.android.pulentapp.databinding.FragmentSearchMusicBinding
 import com.anibalbastias.android.pulentapp.ui.search.model.SearchMusicViewData
 import com.anibalbastias.android.pulentapp.ui.search.model.SearchResultItemViewData
 import com.anibalbastias.android.pulentapp.ui.search.viewmodel.SearchMusicViewModel
-import com.anibalbastias.android.pulentapp.util.*
-import javax.inject.Inject
+import com.anibalbastias.android.pulentapp.util.applyFontForToolbarTitle
+import com.anibalbastias.android.pulentapp.util.implementObserver
+import com.anibalbastias.android.pulentapp.util.setNoArrowUpToolbar
 
 class SearchFragment : BaseModuleFragment() {
 
     override fun tagName(): String = this::class.java.simpleName
     override fun layoutId(): Int = R.layout.fragment_search_music
 
-    @Inject
-    lateinit var viewModelFactory: ViewModelFactory
     private lateinit var searchViewModel: SearchMusicViewModel
 
     private var binding: FragmentSearchMusicBinding? = null
@@ -44,40 +41,27 @@ class SearchFragment : BaseModuleFragment() {
         initToolbar()
 
         searchViewModel.searchListDataView?.let {
-            setPageData(it)
+            setResultsData(it)
         } ?: searchViewModel.getSeriesData()
     }
 
     private fun initViewModel() {
-        searchViewModel.getPageLiveData().initObserver(this@SearchFragment) {
-            if (it != null) {
-                this.handlePageData(it.status, it.data, it.message)
-            }
-        }
-    }
-
-    private fun handlePageData(status: ResourceState, data: SearchMusicViewData?, message: String?) {
-        when (status) {
-            ResourceState.DEFAULT -> {
-            }
-            ResourceState.LOADING -> showLoadingView()
-            ResourceState.SUCCESS -> setPageData(data!!)
-            ResourceState.ERROR -> showErrorView(message)
-            else -> {
-            }
-        }
+        implementObserver(searchViewModel.getSearchResultsLiveData(),
+            successBlock = { viewData -> setResultsData(viewData) },
+            loadingBlock = { showLoadingView() },
+            errorBlock = { showErrorView(it) })
     }
 
     private fun showErrorView(message: String?) {
-        binding?.searchLoader?.gone()
+        searchViewModel.isLoading.set(false)
     }
 
     private fun showLoadingView() {
-        binding?.searchLoader?.visible()
+        searchViewModel.isLoading.set(true)
     }
 
-    private fun setPageData(data: SearchMusicViewData) {
-        binding?.searchLoader?.gone()
+    private fun setResultsData(data: SearchMusicViewData) {
+        searchViewModel.isLoading.set(false)
 
         // Set Adapter
         setAdapter(data.results)
@@ -93,6 +77,7 @@ class SearchFragment : BaseModuleFragment() {
 //        adapter?.itemCallback = this
 //        adapter?.items = results as MutableList<SeriesItemData>?
 //        binding?.searchListRecyclerView?.adapter = adapter
+
     }
 
     private fun initToolbar() {

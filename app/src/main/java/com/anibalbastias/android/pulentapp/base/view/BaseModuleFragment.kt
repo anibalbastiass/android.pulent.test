@@ -7,12 +7,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.anibalbastias.android.pulentapp.base.api.domain.base.db.RealmManager
+import com.anibalbastias.android.pulentapp.base.module.ViewModelFactory
 import com.anibalbastias.android.pulentapp.util.inflate
+import javax.inject.Inject
 
 abstract class BaseModuleFragment : Fragment() {
 
     abstract fun tagName(): String
     abstract fun layoutId(): Int
+
+    @Inject
+    lateinit var viewModelFactory: ViewModelFactory
 
     var mResources: Resources? = null
 

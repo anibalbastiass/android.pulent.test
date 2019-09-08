@@ -13,11 +13,16 @@ import android.widget.Toast
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.anibalbastias.android.pulentapp.GlideApp
 import com.anibalbastias.android.pulentapp.R
+import com.anibalbastias.android.pulentapp.base.view.Resource
+import com.anibalbastias.android.pulentapp.base.view.ResourceState
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import java.util.*
 
@@ -127,5 +132,63 @@ fun launchUrlInCustomTabBase(activity: Activity, url: String) {
 
     } catch (exception: Exception) {
         activity.toast(activity.getString(R.string.generic_error_message))
+    }
+}
+
+fun SwipeRefreshLayout.initSwipe(onSwipeUnit: (() -> Unit)?) {
+    this.setColorSchemeColors(ContextCompat.getColor(context, R.color.primaryColor))
+    this.setOnRefreshListener { onSwipeUnit?.invoke() }
+}
+
+/**
+ * Implements a custom observer
+ * to a MutableLiveData object
+ */
+fun <T> Fragment.implementObserver(mutableLiveData: MutableLiveData<Resource<T>>,
+                                   successBlock: (T) -> Unit = {},
+                                   loadingBlock: () -> Unit = {},
+                                   errorBlock: (String?) -> Unit = {},
+                                   defaultBlock: () -> Unit = {},
+                                   codeBlock: () -> Unit = {},
+                                   hideLoadingBlock: () -> Unit = {}) {
+
+    handleObserver(mutableLiveData, defaultBlock, successBlock, loadingBlock, errorBlock, codeBlock, hideLoadingBlock)
+}
+
+
+private fun <T> Fragment.handleObserver(mutableLiveData: MutableLiveData<Resource<T>>,
+                                        defaultBlock: () -> Unit,
+                                        successBlock: (T) -> Unit,
+                                        loadingBlock: () -> Unit,
+                                        errorBlock: (String?) -> Unit,
+                                        codeBlock: () -> Unit,
+                                        hideLoadingBlock: () -> Unit = {}) {
+    mutableLiveData.initObserver(this) {
+        handleStateObservers(codeBlock, it, defaultBlock, successBlock, loadingBlock, errorBlock, hideLoadingBlock)
+    }
+}
+
+private fun <T> handleStateObservers(codeBlock: () -> Unit,
+                                     it: Resource<T>?,
+                                     defaultBlock: () -> Unit,
+                                     successBlock: (T) -> Unit,
+                                     loadingBlock: () -> Unit,
+                                     errorBlock: (String?) -> Unit,
+                                     hideLoadingBlock: () -> Unit = {}) {
+    codeBlock()
+
+    when (it?.status) {
+        ResourceState.DEFAULT -> defaultBlock()
+        ResourceState.SUCCESS -> {
+            hideLoadingBlock()
+            successBlock(it.data!!)
+        }
+        ResourceState.LOADING -> loadingBlock()
+        ResourceState.ERROR -> {
+            hideLoadingBlock()
+            errorBlock(it.message)
+        }
+        else -> {
+        }
     }
 }

@@ -8,25 +8,14 @@ import com.anibalbastias.android.pulentapp.component.ApplicationComponent
 import com.anibalbastias.android.pulentapp.component.DaggerApplicationComponent
 import com.anibalbastias.android.pulentapp.module.ApplicationModule
 import io.realm.Realm
-import io.realm.Realm.setDefaultConfiguration
-import io.realm.RealmConfiguration
-
 
 var context: PulentApplication? = null
-fun getAppContext(): PulentApplication {
-    return context!!
-}
 
 class PulentApplication : MultiDexApplication() {
 
     companion object {
         lateinit var appContext: Context
         var applicationComponent: ApplicationComponent? = null
-    }
-
-    init {
-        //Initialize Tenant Always first
-
     }
 
     override fun onCreate() {

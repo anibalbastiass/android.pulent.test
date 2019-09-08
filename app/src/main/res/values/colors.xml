@@ -17,4 +17,6 @@
     <color name="errorText">#666666</color>
     <color name="white">#ffffff</color>
     <color name="transparent">#00ffffff</color>
+    <color name="darkGrey2">#8e8e93</color>
+    <color name="backgroundColor">#eeeeee</color>
 </resources>
