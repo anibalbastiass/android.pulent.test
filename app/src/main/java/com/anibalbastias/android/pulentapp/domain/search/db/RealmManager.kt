@@ -1,5 +1,6 @@
-package com.anibalbastias.android.pulentapp.domain.base.db
+package com.anibalbastias.android.pulentapp.domain.search.db
 
+import com.anibalbastias.android.pulentapp.domain.search.dao.SearchRecentDao
 import com.anibalbastias.android.pulentapp.domain.search.dao.SearchResultItemDao
 import com.anibalbastias.android.pulentapp.domain.search.model.ResultItemRealmData
 import io.realm.Realm
@@ -25,6 +26,11 @@ object RealmManager {
         }
     }
 
+    fun createSearchRecentDao(): SearchRecentDao {
+        checkForOpenRealm()
+        return SearchRecentDao(mRealm)
+    }
+
     fun createSearchResultItemDao(): SearchResultItemDao {
         checkForOpenRealm()
         return SearchResultItemDao(mRealm)
@@ -34,7 +40,6 @@ object RealmManager {
         checkForOpenRealm()
         mRealm?.executeTransaction { realm ->
             realm.delete<ResultItemRealmData>()
-//            realm.clear(ResultItemRealmData::class.java)
             //clear rest of your dao classes
         }
     }

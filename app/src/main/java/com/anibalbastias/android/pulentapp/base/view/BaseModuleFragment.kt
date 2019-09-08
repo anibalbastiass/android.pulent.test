@@ -10,7 +10,7 @@ import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.navigation.Navigator
-import com.anibalbastias.android.pulentapp.domain.base.db.RealmManager
+import com.anibalbastias.android.pulentapp.domain.search.db.RealmManager
 import com.anibalbastias.android.pulentapp.base.module.ViewModelFactory
 import com.anibalbastias.android.pulentapp.presentation.util.inflate
 import javax.inject.Inject

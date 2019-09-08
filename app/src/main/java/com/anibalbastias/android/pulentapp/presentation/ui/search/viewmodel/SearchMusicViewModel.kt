@@ -9,17 +9,25 @@ import com.anibalbastias.android.pulentapp.base.subscriber.BaseSubscriber
 import com.anibalbastias.android.pulentapp.base.view.BaseViewModel
 import com.anibalbastias.android.pulentapp.base.view.Resource
 import com.anibalbastias.android.pulentapp.base.view.ResourceState
+import com.anibalbastias.android.pulentapp.domain.search.db.RealmManager
+import com.anibalbastias.android.pulentapp.domain.search.model.SearchRecentRealmData
 import com.anibalbastias.android.pulentapp.presentation.context
+import com.anibalbastias.android.pulentapp.presentation.ui.search.mapper.SearchResultItemRealmMapper
 import com.anibalbastias.android.pulentapp.presentation.ui.search.mapper.SearchViewDataMapper
 import com.anibalbastias.android.pulentapp.presentation.ui.search.model.SearchMusicViewData
 import com.anibalbastias.android.pulentapp.presentation.ui.search.model.SearchResultItemViewData
 import com.anibalbastias.android.pulentapp.presentation.util.empty
 import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
+import com.anibalbastias.android.pulentapp.presentation.ui.search.interfaces.GetSearchRecentsListener
+import java.util.*
+import kotlin.collections.ArrayList
+
 
 class SearchMusicViewModel @Inject constructor(
     private val getSearchMusicUseCase: GetSearchMusicUseCase,
-    private val searchViewDataMapper: SearchViewDataMapper
+    private val searchViewDataMapper: SearchViewDataMapper,
+    private val searchResultItemRealmMapper: SearchResultItemRealmMapper
 ) : BaseViewModel() {
 
     companion object {
@@ -31,9 +39,11 @@ class SearchMusicViewModel @Inject constructor(
         private const val COUNTRY = "cl"
     }
 
+
     // region Observables
     var isLoading: ObservableBoolean = ObservableBoolean(false)
     var isError: ObservableBoolean = ObservableBoolean(false)
+    var isEmpty: ObservableBoolean = ObservableBoolean(false)
 
     var keyword: ObservableField<String> = ObservableField(String.empty())
     var offset: ObservableInt = ObservableInt(0)
@@ -60,18 +70,22 @@ class SearchMusicViewModel @Inject constructor(
         }
 
     override fun onCleared() {
-        super.onCleared()
         getSearchMusicUseCase.dispose()
+        super.onCleared()
     }
 
     fun getSearchResultsLiveData(): MutableLiveData<Resource<SearchMusicViewData>> =
         getSearchMusicLiveData
 
     fun getSearchResultsData(isPaging: Boolean? = false) {
-        nextPageURL.set(String.format(URL_FORMAT,
-            SEARCH_URL + keyword.get(), offset.get(), MEDIA_TYPE, PAGE_SIZE, COUNTRY))
+        nextPageURL.set(
+            String.format(
+                URL_FORMAT,
+                SEARCH_URL + keyword.get(), offset.get(), MEDIA_TYPE, PAGE_SIZE, COUNTRY
+            )
+        )
 
-        if(!isPaging!!) {
+        if (!isPaging!!) {
             isLoading.set(true)
             getSearchMusicLiveData.postValue(Resource(ResourceState.LOADING, null, null))
         }
@@ -107,6 +121,30 @@ class SearchMusicViewModel @Inject constructor(
         } else {
             //FirstPage Loaded
             searchResultListPaginationViewData = t.results
+        }
+    }
+
+    fun putRecentSearchItem(
+        keyword: String,
+        itemsVD: java.util.ArrayList<SearchResultItemViewData?>
+    ) {
+        val searchItem = SearchRecentRealmData()
+        searchItem.id = Date().time.toInt()
+        searchItem.keyword = keyword
+
+        val itemsResult = itemsVD.map {
+            searchResultItemRealmMapper.executeMapping(it)!!
+        }
+//        searchItem.results = itemsResult
+
+        RealmManager.createSearchResultItemDao().save(itemsResult)
+        RealmManager.createSearchRecentDao().save(searchItem)
+    }
+
+    fun loadRecentSearchListAsync(callback: GetSearchRecentsListener?) {
+        val dataList = RealmManager.createSearchRecentDao().loadAllAsync()
+        dataList.addChangeListener { t, changeSet ->
+            callback?.onGetRecentSearchFromRealm(t)
         }
     }
 }

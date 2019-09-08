@@ -78,13 +78,25 @@
                     android:id="@+id/searchListRecyclerView"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
+                    android:clipChildren="false"
                     android:clipToPadding="false"
                     android:scrollbars="vertical"
-                    android:clipChildren="false"
-                    tools:listitem="@layout/view_cell_search_list_item"
-                    android:visibility="visible" />
+                    android:visibility="visible"
+                    tools:listitem="@layout/view_cell_search_list_item" />
 
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+        <include
+                android:id="@+id/searchEmptyContainer"
+                layout="@layout/view_cell_search_empty"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:visibility="@{searchViewModel.isEmpty == true ? View.VISIBLE : View.GONE}"
+                tools:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/searchFinderContainer" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

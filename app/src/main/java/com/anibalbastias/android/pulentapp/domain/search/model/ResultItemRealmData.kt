@@ -10,9 +10,9 @@ import io.realm.RealmObject
 import io.realm.annotations.PrimaryKey
 
 open class ResultItemRealmData : RealmObject() {
-    
-    @PrimaryKey
-    var trackId: Int? = null
+
+    @PrimaryKey @JvmField
+    var trackId: Int = 0
     var artistId: Int? = null
     var collectionId: Int? = null
     var kind: String? = null

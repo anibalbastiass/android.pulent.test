@@ -8,6 +8,7 @@ import com.anibalbastias.android.pulentapp.presentation.component.ApplicationCom
 import com.anibalbastias.android.pulentapp.presentation.component.DaggerApplicationComponent
 import com.anibalbastias.android.pulentapp.presentation.module.ApplicationModule
 import io.realm.Realm
+import io.realm.RealmConfiguration
 
 var context: PulentApplication? = null
 fun getAppContext(): PulentApplication {
@@ -31,7 +32,11 @@ class PulentApplication : MultiDexApplication() {
 
     private fun setRealm() {
         // Initialize Realm (just once per application)
+//        Realm.init(this)
         Realm.init(this)
+        val config = RealmConfiguration.Builder()
+            .deleteRealmIfMigrationNeeded()
+            .build()
     }
 }
 

@@ -28,12 +28,16 @@ import android.widget.LinearLayout
 import androidx.cardview.widget.CardView
 import androidx.core.view.ViewCompat
 import com.anibalbastias.android.pulentapp.R
+import com.anibalbastias.android.pulentapp.domain.search.model.SearchRecentRealmData
+import com.anibalbastias.android.pulentapp.presentation.ui.search.interfaces.GetSearchRecentsListener
+import io.realm.RealmResults
 
 
 class SearchFragment : BaseModuleFragment(),
     SearchListener,
     ClearableEditText.Listener,
-    BaseBindClickHandler<SearchResultItemViewData> {
+    BaseBindClickHandler<SearchResultItemViewData>,
+    GetSearchRecentsListener {
 
     override fun tagName(): String = this::class.java.simpleName
     override fun layoutId(): Int = R.layout.fragment_search_music
@@ -113,19 +117,21 @@ class SearchFragment : BaseModuleFragment(),
 
     private fun showErrorView(message: String?) {
         searchViewModel.isLoading.set(false)
+        searchViewModel.isEmpty.set(true)
     }
 
     private fun showLoadingView() {
+        searchViewModel.isEmpty.set(false)
         searchViewModel.isLoading.set(true)
     }
 
     private fun setResultsData(items: SearchMusicViewData) {
-
         searchViewModel.isLoading.set(false)
-
         binding?.searchListSwipeRefreshLayout?.isRefreshing = false
 
         if (searchViewModel.isLoadingMorePages.compareAndSet(true, false)) {
+            searchViewModel.isEmpty.set(false)
+
             searchMusicAdapter.removeLoadingFooter()
             searchViewModel.addMoreItemsInProgressData(items)
 
@@ -148,9 +154,14 @@ class SearchFragment : BaseModuleFragment(),
                     if (itemsVD.isNotEmpty()) {
                         searchMusicAdapter.clickHandler = this
                         searchMusicAdapter.items = itemsVD
+                        searchViewModel.isEmpty.set(false)
+
+                        searchViewModel.putRecentSearchItem(searchViewModel.keyword.get()!!, itemsVD)
+
                         setAdapterByData()
                     } else {
                         // Show Empty View
+                        showEmptyView()
                     }
                 }
             } else {
@@ -231,7 +242,13 @@ class SearchFragment : BaseModuleFragment(),
     }
 
     private fun showEmptyView() {
+        searchViewModel.isEmpty.set(true)
+        searchViewModel.loadRecentSearchListAsync(this)
+    }
 
+    override fun onGetRecentSearchFromRealm(list: RealmResults<SearchRecentRealmData>) {
+
+        activity?.toast(list.asJSON())
     }
 
     private fun getImageViewFromChild(view: View): ImageView {
