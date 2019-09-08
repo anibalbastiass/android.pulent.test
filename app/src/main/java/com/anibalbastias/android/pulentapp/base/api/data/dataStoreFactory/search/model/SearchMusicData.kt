@@ -9,5 +9,5 @@ data class SearchMusicData(
 	val resultCount: Int? = null,
 
 	@field:SerializedName("results")
-	val results: List<SearchResultItemData?>? = null
+	val results: ArrayList<SearchResultItemData?>? = null
 ) : TypeData()

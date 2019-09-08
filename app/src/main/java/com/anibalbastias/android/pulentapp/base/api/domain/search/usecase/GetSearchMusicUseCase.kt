@@ -12,9 +12,9 @@ class GetSearchMusicUseCase @Inject constructor(
     private val detailRepository: ISeriesRepository,
     threadExecutor: APIThreadExecutor,
     postExecutionThread: APIPostExecutionThread
-) : FlowableUseCase<SearchMusicData, Map<String, String>?>(threadExecutor, postExecutionThread) {
+) : FlowableUseCase<SearchMusicData, String?>(threadExecutor, postExecutionThread) {
 
-    override fun buildUseCaseObservable(params: Map<String, String>?): Flowable<SearchMusicData> {
+    override fun buildUseCaseObservable(params: String?): Flowable<SearchMusicData> {
         return params?.let { detailRepository.searchMusic(it) }!!
     }
 }

@@ -12,7 +12,9 @@ import com.anibalbastias.android.pulentapp.base.view.ResourceState
 import com.anibalbastias.android.pulentapp.context
 import com.anibalbastias.android.pulentapp.ui.search.mapper.SearchViewDataMapper
 import com.anibalbastias.android.pulentapp.ui.search.model.SearchMusicViewData
+import com.anibalbastias.android.pulentapp.ui.search.model.SearchResultItemViewData
 import com.anibalbastias.android.pulentapp.util.empty
+import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
 
 class SearchMusicViewModel @Inject constructor(
@@ -21,16 +23,12 @@ class SearchMusicViewModel @Inject constructor(
 ) : BaseViewModel() {
 
     companion object {
-        private const val PAGE_SIZE = 20
+        const val PAGE_SIZE = 20
+        private const val URL_FORMAT = "%s&offset=%d&mediaType=%s&limit=%d&country=%s"
+        private const val SEARCH_URL = "search?term="
+
         private const val MEDIA_TYPE = "music"
         private const val COUNTRY = "cl"
-
-        // Hash Map keys
-        private const val TERM_KEY = "term"
-        private const val OFFSET_KEY = "offset"
-        private const val MEDIA_TYPE_KEY = "mediaType"
-        private const val LIMIT_KEY = "limit"
-        private const val COUNTRY_KEY = "country"
     }
 
     // region Observables
@@ -39,13 +37,28 @@ class SearchMusicViewModel @Inject constructor(
 
     var keyword: ObservableField<String> = ObservableField(String.empty())
     var offset: ObservableInt = ObservableInt(0)
+
+    var nextPageURL: ObservableField<String> = ObservableField(String.empty())
+    var lastPosition: ObservableInt = ObservableInt(0)
+    var itemPosition: ObservableInt = ObservableInt(0)
     // endregion
+
+    var isLoadingMorePages: AtomicBoolean = AtomicBoolean(false)
 
     //region LiveData vars
     private val getSearchMusicLiveData: MutableLiveData<Resource<SearchMusicViewData>> =
         MutableLiveData()
     private val pageDataLiveData: MutableLiveData<SearchMusicViewData> = MutableLiveData()
+
+    private val searchResultListLiveData: MutableLiveData<ArrayList<SearchResultItemViewData?>?> =
+        MutableLiveData()
     //endregion
+
+    var searchResultListPaginationViewData: ArrayList<SearchResultItemViewData?>?
+        get() = searchResultListLiveData.value
+        set(value) {
+            searchResultListLiveData.value = value
+        }
 
     var searchListDataView: SearchMusicViewData?
         get() = pageDataLiveData.value
@@ -65,26 +78,46 @@ class SearchMusicViewModel @Inject constructor(
     fun getSearchResultsLiveData(): MutableLiveData<Resource<SearchMusicViewData>> =
         getSearchMusicLiveData
 
-    fun getSearchResultsData() {
-        val params = mutableMapOf<String, String>()
-        params[TERM_KEY] = keyword.get() ?: String.empty()
-        params[OFFSET_KEY] = "${offset.get()}"
-        params[MEDIA_TYPE_KEY] = MEDIA_TYPE
-        params[LIMIT_KEY] = "$PAGE_SIZE"
-        params[COUNTRY_KEY] = COUNTRY
+    fun getSearchResultsData(isPaging: Boolean? = false) {
+        nextPageURL.set(String.format(URL_FORMAT,
+            SEARCH_URL + keyword.get(), offset.get(), MEDIA_TYPE, PAGE_SIZE, COUNTRY))
 
-        isLoading.set(true)
-        getSearchMusicLiveData.postValue(Resource(ResourceState.LOADING, null, null))
+        if(!isPaging!!) {
+            isLoading.set(true)
+            getSearchMusicLiveData.postValue(Resource(ResourceState.LOADING, null, null))
+        }
 
         return getSearchMusicUseCase.execute(
             BaseSubscriber(
                 context?.applicationContext, this, searchViewDataMapper,
                 getSearchMusicLiveData, isLoading, isError
-            ), params
+            ), nextPageURL.get()
         )
     }
 
     fun onKeywordTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
         keyword.set(s.toString())
+    }
+
+    fun addMoreItemsInProgressData(t: SearchMusicViewData) {
+        val isFirstPageLoad = nextPageURL.get()?.isEmpty()
+        nextPageURL.set("${t.resultCount}")
+
+        if (!isFirstPageLoad!!) {
+            //Pagination Loaded
+            val oldList = searchResultListPaginationViewData
+
+            t.results?.let {
+                if (!it.filterNotNull().isNullOrEmpty()) {
+                    val addSuccessful = oldList?.addAll(it.toList())
+                    if (addSuccessful == true) {
+                        searchResultListPaginationViewData = oldList
+                    }
+                }
+            }
+        } else {
+            //FirstPage Loaded
+            searchResultListPaginationViewData = t.results
+        }
     }
 }

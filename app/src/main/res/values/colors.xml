@@ -19,4 +19,6 @@
     <color name="transparent">#00ffffff</color>
     <color name="darkGrey2">#8e8e93</color>
     <color name="backgroundColor">#eeeeee</color>
+    <color name="textPrimaryColorGrey">#4a4a4a</color>
+    <color name="grey_divider">#BBB</color>
 </resources>

@@ -8,5 +8,5 @@ import io.reactivex.Flowable
  */
 interface ISeriesRepository {
 
-    fun searchMusic(map: Map<String, String>): Flowable<SearchMusicData>
+    fun searchMusic(url: String): Flowable<SearchMusicData>
 }

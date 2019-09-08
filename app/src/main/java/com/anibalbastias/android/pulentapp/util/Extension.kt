@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.net.Uri
+import android.view.animation.AnimationUtils
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -18,6 +19,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.anibalbastias.android.pulentapp.GlideApp
 import com.anibalbastias.android.pulentapp.R
@@ -191,4 +193,10 @@ private fun <T> handleStateObservers(codeBlock: () -> Unit,
         else -> {
         }
     }
+}
+
+fun RecyclerView.runLayoutAnimation() {
+    layoutAnimation = AnimationUtils.loadLayoutAnimation(context, R.anim.layout_animation_fall_down)
+    adapter?.notifyDataSetChanged()
+    scheduleLayoutAnimation()
 }

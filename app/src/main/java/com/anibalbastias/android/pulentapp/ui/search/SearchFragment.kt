@@ -5,25 +5,33 @@ import android.view.View
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.anibalbastias.android.pulentapp.R
 import com.anibalbastias.android.pulentapp.appComponent
+import com.anibalbastias.android.pulentapp.base.adapter.base.BaseBindClickHandler
 import com.anibalbastias.android.pulentapp.base.module.getViewModel
 import com.anibalbastias.android.pulentapp.base.view.BaseModuleFragment
 import com.anibalbastias.android.pulentapp.databinding.FragmentSearchMusicBinding
+import com.anibalbastias.android.pulentapp.ui.search.adapter.SearchMusicAdapter
 import com.anibalbastias.android.pulentapp.ui.search.interfaces.SearchListener
 import com.anibalbastias.android.pulentapp.ui.search.model.SearchMusicViewData
 import com.anibalbastias.android.pulentapp.ui.search.model.SearchResultItemViewData
 import com.anibalbastias.android.pulentapp.ui.search.viewmodel.SearchMusicViewModel
 import com.anibalbastias.android.pulentapp.util.*
+import javax.inject.Inject
 
 class SearchFragment : BaseModuleFragment(),
     SearchListener,
-    ClearableEditText.Listener {
+    ClearableEditText.Listener,
+    BaseBindClickHandler<SearchResultItemViewData> {
 
     override fun tagName(): String = this::class.java.simpleName
     override fun layoutId(): Int = R.layout.fragment_search_music
 
     private lateinit var searchViewModel: SearchMusicViewModel
+
+    @Inject
+    lateinit var searchMusicAdapter: SearchMusicAdapter
 
     private var binding: FragmentSearchMusicBinding? = null
 
@@ -95,23 +103,112 @@ class SearchFragment : BaseModuleFragment(),
         searchViewModel.isLoading.set(true)
     }
 
-    private fun setResultsData(data: SearchMusicViewData) {
+    private fun setResultsData(items: SearchMusicViewData) {
+
         searchViewModel.isLoading.set(false)
 
-        // Set Adapter
-        setAdapter(data.results)
+        binding?.searchListSwipeRefreshLayout?.isRefreshing = false
+
+        if (searchViewModel.isLoadingMorePages.compareAndSet(true, false)) {
+            searchMusicAdapter.removeLoadingFooter()
+            searchViewModel.addMoreItemsInProgressData(items)
+
+            // Update Next Identifier for pagination
+            if (items.results?.isNotEmpty()!!) {
+                searchViewModel.nextPageURL.set("${items.resultCount}")
+                searchViewModel.lastPosition.set(items.results.size)
+            } else {
+                searchViewModel.nextPageURL.set(String.empty())
+            }
+
+        } else {
+            if (items.results?.isNotEmpty()!!) {
+                // Set data
+                searchViewModel.searchResultListPaginationViewData = items.results
+
+                items.results.let { itemsVD ->
+                    binding?.searchListRecyclerView?.visible()
+
+                    if (itemsVD.isNotEmpty()) {
+                        searchMusicAdapter.clickHandler = this
+                        searchMusicAdapter.items = itemsVD
+                        setAdapterByData()
+                    } else {
+                        // Show Empty View
+                    }
+                }
+            } else {
+                searchViewModel.searchResultListPaginationViewData?.apply {
+                    clear()
+
+                    searchMusicAdapter.clickHandler = this@SearchFragment
+                    searchMusicAdapter.items = this
+                }
+                setAdapterByData()
+
+                showEmptyView()
+            }
+        }
     }
 
-    private fun setAdapter(results: List<SearchResultItemViewData?>?) {
-        binding?.searchListRecyclerView?.layoutManager = LinearLayoutManager(
-            activity!!,
-            LinearLayoutManager.VERTICAL, false
-        )
+    private fun setAdapterByData() {
+        context?.let {
+            val tdLayoutManager = WrapContentLinearLayoutManager(it, LinearLayoutManager.VERTICAL, false)
 
-//        val adapter = SeriesListAdapter()
-//        adapter?.itemCallback = this
-//        adapter?.items = results as MutableList<SeriesItemData>?
-//        binding?.searchListRecyclerView?.adapter = adapter
+            binding?.searchListRecyclerView?.let { rv ->
+                rv.setHasFixedSize(true)
+                rv.layoutManager = tdLayoutManager
+                rv.adapter = searchMusicAdapter
+
+                paginationForRecyclerScroll()
+                rv.scrollToPosition(searchViewModel.itemPosition.get())
+                rv.runLayoutAnimation()
+            }
+        }
+    }
+
+    private fun paginationForRecyclerScroll() {
+        binding?.searchListRecyclerView?.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+
+                searchViewModel.itemPosition.set((binding?.searchListRecyclerView?.layoutManager as
+                        WrapContentLinearLayoutManager).findFirstVisibleItemPosition())
+
+                if (searchViewModel.nextPageURL.get()?.isNotEmpty()!!) {
+                    val visibleItemCount = binding?.searchListRecyclerView?.layoutManager?.childCount
+                    val totalItemCount = binding?.searchListRecyclerView?.layoutManager?.itemCount
+                    val firstVisibleItemPosition = (binding?.searchListRecyclerView?.layoutManager as WrapContentLinearLayoutManager).findFirstVisibleItemPosition()
+
+                    if (!searchViewModel.isLoadingMorePages.get()) {
+                        if (visibleItemCount!! + firstVisibleItemPosition >= totalItemCount!! && firstVisibleItemPosition >= 0) {
+                            searchViewModel.apply {
+                                lastPosition.set(searchResultListPaginationViewData?.size!!)
+
+                                if (searchViewModel.lastPosition.get() >= SearchMusicViewModel.PAGE_SIZE) {
+                                    isLoadingMorePages.set(true)
+
+                                    // Increment offset
+                                    offset.set(offset.get() + SearchMusicViewModel.PAGE_SIZE)
+                                    searchMusicAdapter.addLoadingFooter()
+
+                                    // Fetch next list
+                                    isLoading.set(false)
+                                    getSearchResultsData(isPaging = true)
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        })
+    }
+
+    private fun showEmptyView() {
+
+    }
+
+    override fun onClickView(view: View, item: SearchResultItemViewData) {
 
     }
 

@@ -3,6 +3,7 @@ package com.anibalbastias.android.pulentapp.ui.search.mapper
 import com.anibalbastias.android.pulentapp.base.api.data.dataStoreFactory.search.model.SearchMusicData
 import com.anibalbastias.android.pulentapp.base.api.domain.base.Mapper
 import com.anibalbastias.android.pulentapp.ui.search.model.SearchMusicViewData
+import com.anibalbastias.android.pulentapp.ui.search.model.SearchResultItemViewData
 import javax.inject.Inject
 
 /**
@@ -17,7 +18,7 @@ class SearchViewDataMapper @Inject constructor(
         return type?.let {  item ->
             SearchMusicViewData(
                 resultCount = item.resultCount,
-                results = item.results?.map { searchResultItemViewDataMapper.executeMapping(it) }
+                results = item.results?.map { searchResultItemViewDataMapper.executeMapping(it) } as ArrayList<SearchResultItemViewData?>?
             )
         }
     }

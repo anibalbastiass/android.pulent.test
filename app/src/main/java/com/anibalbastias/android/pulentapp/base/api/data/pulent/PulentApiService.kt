@@ -1,10 +1,9 @@
 package com.anibalbastias.android.pulentapp.base.api.data.pulent
 
-
 import com.anibalbastias.android.pulentapp.base.api.data.dataStoreFactory.search.model.SearchMusicData
 import io.reactivex.Flowable
 import retrofit2.http.GET
-import retrofit2.http.QueryMap
+import retrofit2.http.Url
 
 /**
  * Created by anibalbastias on 3/03/19.
@@ -13,6 +12,6 @@ import retrofit2.http.QueryMap
 interface PulentApiService {
 
     //Get Search Data
-    @GET("search")
-    fun searchMusic(@QueryMap parameters: Map<String, String>): Flowable<SearchMusicData>
+    @GET
+    fun searchMusic(@Url nextUrl: String): Flowable<SearchMusicData>
 }
