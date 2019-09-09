@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/pulent_search_nav_graph"
+        app:startDestination="@id/searchFragment"
+        tools:ignore="UnusedNavigation">
+
+    <fragment
+            android:id="@+id/searchFragment"
+            android:name="com.anibalbastias.android.pulentapp.presentation.ui.search.SearchFragment"
+            android:label="SearchFragment"
+            tools:layout="@layout/fragment_search_music">
+
+        <action
+                android:id="@+id/action_searchFragment_to_resultItemFragment"
+                app:destination="@id/resultItemFragment"
+                app:enterAnim="@anim/fade_in_fragment"
+                app:exitAnim="@anim/fade_out_fragment"
+                app:popEnterAnim="@anim/fade_in_fragment"
+                app:popExitAnim="@anim/fade_out_fragment"/>
+
+    </fragment>
+
+    <fragment
+            android:id="@+id/resultItemFragment"
+            android:name="com.anibalbastias.android.pulentapp.presentation.ui.resultitem.ResultItemFragment"
+            android:label="ResultItemFragment"
+            tools:layout="@layout/fragment_result_detail_content">
+
+    </fragment>
+
+</navigation>

@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:bind="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+                name="searchViewModel"
+                type="com.anibalbastias.android.pulentapp.presentation.ui.search.viewmodel.SearchMusicViewModel" />
+
+        <variable
+                name="finderCallback"
+                type="com.anibalbastias.android.pulentapp.presentation.ui.search.interfaces.SearchListener" />
+
+        <variable
+                name="recentSearchCallback"
+                type="com.anibalbastias.android.pulentapp.presentation.ui.search.interfaces.SearchRecentListener" />
+
+        <variable
+                name="clearableListener"
+                type="com.anibalbastias.android.pulentapp.presentation.util.widget.ClearableEditText.Listener" />
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        <androidx.appcompat.widget.Toolbar
+                android:id="@+id/searchToolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="@color/white"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:theme="@style/ToolBarDetailsStyle"
+                app:titleTextColor="@color/primaryColor" />
+
+        <include
+                android:id="@+id/searchFinderContainer"
+                layout="@layout/view_cell_search_finder"
+                android:layout_width="match_parent"
+                android:layout_height="65dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/searchToolbar"
+                bind:clearableListener="@{clearableListener}"
+                bind:finderCallback="@{finderCallback}"
+                bind:searchViewModel="@{searchViewModel}" />
+
+        <com.anibalbastias.android.pulentapp.presentation.util.widget.DotLoadingIndicatorView
+                android:id="@+id/searchLoader"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
+                android:gravity="center"
+                android:visibility="@{searchViewModel.isLoading == true ? View.VISIBLE : View.GONE}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/searchFinderContainer" />
+
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+                android:id="@+id/searchListSwipeRefreshLayout"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:visibility="@{searchViewModel.isLoading == false ? View.VISIBLE : View.GONE}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/searchFinderContainer">
+
+            <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/searchListRecyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:clipChildren="false"
+                    android:clipToPadding="false"
+                    android:scrollbars="vertical"
+                    android:visibility="visible"
+                    tools:listitem="@layout/view_cell_search_list_item" />
+
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+        <include
+                android:id="@+id/searchEmptyContainer"
+                layout="@layout/view_cell_search_empty"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                bind:searchViewModel="@{searchViewModel}"
+                bind:recentSearchCallback="@{recentSearchCallback}"
+                android:visibility="@{searchViewModel.isEmpty == true ? View.VISIBLE : View.GONE}"
+                tools:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/searchFinderContainer" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>
