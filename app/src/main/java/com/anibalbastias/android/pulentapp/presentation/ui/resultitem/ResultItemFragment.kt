@@ -245,7 +245,7 @@ class ResultItemFragment : BaseModuleFragment(),
         resultItemViewModel.onPauseButton.set(true)
 
         if (mediaPlayerSeekbar != null) {
-            resultItemViewModel?.seekPosition.set(mediaUtils?.getCurrentPosition()?.toInt()!!)
+            resultItemViewModel?.seekPosition.set(mediaUtils?.getCurrentPosition()?.toInt() ?: 0)
             mediaUtils?.onPause()
         }
         super.onPause()
