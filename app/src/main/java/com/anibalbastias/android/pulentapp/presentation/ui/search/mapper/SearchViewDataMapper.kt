@@ -12,7 +12,7 @@ import javax.inject.Inject
  * Created by anibalbastias on 2019-09-07.
  */
 
-class SearchViewDataMapper @Inject constructor(
+open class SearchViewDataMapper @Inject constructor(
     private val wrapperViewDataMapper: WrapperViewDataMapper
 ) : Mapper<SearchMusicViewData?, SearchMusicData?> {
 

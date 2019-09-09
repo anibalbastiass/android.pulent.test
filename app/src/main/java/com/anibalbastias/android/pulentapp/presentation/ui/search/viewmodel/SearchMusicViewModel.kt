@@ -28,7 +28,7 @@ import io.realm.RealmList
 import kotlin.collections.ArrayList
 
 
-class SearchMusicViewModel @Inject constructor(
+open class SearchMusicViewModel @Inject constructor(
     private val getSearchMusicUseCase: GetSearchMusicUseCase,
     private val searchViewDataMapper: SearchViewDataMapper,
     private val searchResultItemRealmMapper: SearchResultItemRealmMapper
