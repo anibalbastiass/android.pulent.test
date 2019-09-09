@@ -8,11 +8,11 @@
 
         <variable
                 name="item"
-                type="com.anibalbastias.android.pulentapp.ui.search.model.SearchResultItemViewData" />
+                type="com.anibalbastias.android.pulentapp.presentation.ui.search.model.CollectionResultItemViewData" />
 
         <variable
                 name="clickHandler"
-                type="com.anibalbastias.android.pulentapp.base.adapter.base.BaseBindClickHandler" />
+                type="com.anibalbastias.android.pulentapp.presentation.util.adapter.base.BaseBindClickHandler" />
 
     </data>
 
@@ -25,6 +25,8 @@
             android:layout_marginEnd="16sp"
             android:background="@color/white"
             android:foreground="?android:attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
             android:onClick="@{(v) -> clickHandler.onClickView(v, item)}"
             card_view:cardCornerRadius="4dp"
             card_view:cardElevation="4dp"
@@ -38,7 +40,8 @@
             <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:clipToPadding="false">
 
                 <ImageView
                         android:id="@+id/testDriveInventoryItemImageView"
@@ -49,6 +52,7 @@
                         android:layout_weight="30"
                         android:padding="10dp"
                         android:scaleType="fitCenter"
+                        android:transitionName="firstTransitionName"
                         bind:setImageUrl="@{item.artworkUrl100}"
                         tools:src="@drawable/placeholder" />
 
@@ -61,7 +65,6 @@
                         android:padding="5dp">
 
                     <TextView
-                            android:id="@+id/testDriveInventoryItemTitle"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:ellipsize="end"
@@ -72,16 +75,27 @@
                             tools:text="BMW X5 xDrive30d E70 Wagon" />
 
                     <TextView
-                            android:id="@+id/testDriveInventoryItemSubtitle"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             android:layout_weight="1"
                             android:fontFamily="@font/opensans_regular"
                             android:maxLines="1"
-                            android:text="@{item.trackName}"
+                            android:text="@{item.collectionCensoredName}"
                             android:textColor="@color/normalTextColor"
                             android:textSize="13sp"
+                            tools:text="$68.900" />
+
+                    <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_weight="1"
+                            android:fontFamily="@font/opensans_semibold"
+                            android:maxLines="1"
+                            android:text="@{item.collectionPrice != null ? `$` + item.collectionPrice : ``}"
+                            android:textColor="@color/primaryColor"
+                            android:textSize="15dp"
                             tools:text="$68.900" />
 
                 </LinearLayout>

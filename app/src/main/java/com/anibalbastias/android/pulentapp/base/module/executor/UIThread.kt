@@ -1,6 +1,6 @@
 package com.anibalbastias.android.pulentapp.base.module.executor
 
-import com.anibalbastias.android.pulentapp.base.api.domain.base.executor.APIPostExecutionThread
+import com.anibalbastias.android.pulentapp.domain.base.executor.APIPostExecutionThread
 
 import io.reactivex.Scheduler
 import io.reactivex.android.schedulers.AndroidSchedulers

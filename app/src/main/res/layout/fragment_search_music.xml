@@ -10,15 +10,19 @@
 
         <variable
                 name="searchViewModel"
-                type="com.anibalbastias.android.pulentapp.ui.search.viewmodel.SearchMusicViewModel" />
+                type="com.anibalbastias.android.pulentapp.presentation.ui.search.viewmodel.SearchMusicViewModel" />
 
         <variable
                 name="finderCallback"
-                type="com.anibalbastias.android.pulentapp.ui.search.interfaces.SearchListener" />
+                type="com.anibalbastias.android.pulentapp.presentation.ui.search.interfaces.SearchListener" />
+
+        <variable
+                name="recentSearchCallback"
+                type="com.anibalbastias.android.pulentapp.presentation.ui.search.interfaces.SearchRecentListener" />
 
         <variable
                 name="clearableListener"
-                type="com.anibalbastias.android.pulentapp.util.ClearableEditText.Listener" />
+                type="com.anibalbastias.android.pulentapp.presentation.util.widget.ClearableEditText.Listener" />
 
     </data>
 
@@ -49,7 +53,7 @@
                 bind:finderCallback="@{finderCallback}"
                 bind:searchViewModel="@{searchViewModel}" />
 
-        <com.anibalbastias.android.pulentapp.util.DotLoadingIndicatorView
+        <com.anibalbastias.android.pulentapp.presentation.util.widget.DotLoadingIndicatorView
                 android:id="@+id/searchLoader"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -78,12 +82,27 @@
                     android:id="@+id/searchListRecyclerView"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
+                    android:clipChildren="false"
                     android:clipToPadding="false"
                     android:scrollbars="vertical"
-                    tools:listitem="@layout/view_cell_search_list_item"
-                    android:visibility="visible" />
+                    android:visibility="visible"
+                    tools:listitem="@layout/view_cell_search_list_item" />
 
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+        <include
+                android:id="@+id/searchEmptyContainer"
+                layout="@layout/view_cell_search_empty"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                bind:searchViewModel="@{searchViewModel}"
+                bind:recentSearchCallback="@{recentSearchCallback}"
+                android:visibility="@{searchViewModel.isEmpty == true ? View.VISIBLE : View.GONE}"
+                tools:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/searchFinderContainer" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

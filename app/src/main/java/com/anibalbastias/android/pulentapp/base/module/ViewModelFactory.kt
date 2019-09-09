@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.SavedStateViewModelFactory
 import dagger.MapKey
 import javax.inject.Inject
 import javax.inject.Provider
@@ -30,3 +31,10 @@ inline fun <reified R : ViewModel> FragmentActivity.getViewModel(factory: ViewMo
 
 inline fun <reified R : ViewModel> Fragment.getViewModel(factory: ViewModelFactory): R =
         ViewModelProviders.of(this, factory)[R::class.java]
+
+inline fun <reified R : ViewModel> androidx.fragment.app.FragmentActivity.getViewModel(factory: SavedStateViewModelFactory): R =
+    ViewModelProviders.of(this, factory)[R::class.java]
+
+
+inline fun <reified R : ViewModel> androidx.fragment.app.Fragment.getViewModel(factory: SavedStateViewModelFactory): R =
+    ViewModelProviders.of(this, factory)[R::class.java]

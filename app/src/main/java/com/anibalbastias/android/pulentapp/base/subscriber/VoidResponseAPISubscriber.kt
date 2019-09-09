@@ -7,8 +7,7 @@ import com.anibalbastias.android.pulentapp.base.view.Resource
 import com.anibalbastias.android.pulentapp.base.view.ResourceState
 
 /**
- * Created by Dan on 26, June, 2019
- * Copyright (c) 2019 Carsales. All rights reserved.
+ * Created by anibal.bastias on 26, June, 2019
  *
  * Generic base subscriber class.
  * @param context       Context to use optionally in resources or related functionality

@@ -6,9 +6,13 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.anibalbastias.android.pulentapp.base.api.domain.base.db.RealmManager
+import androidx.lifecycle.Observer
+import androidx.navigation.NavController
+import androidx.navigation.Navigation
+import androidx.navigation.Navigator
+import com.anibalbastias.android.pulentapp.domain.search.db.RealmManager
 import com.anibalbastias.android.pulentapp.base.module.ViewModelFactory
-import com.anibalbastias.android.pulentapp.util.inflate
+import com.anibalbastias.android.pulentapp.presentation.util.inflate
 import javax.inject.Inject
 
 abstract class BaseModuleFragment : Fragment() {
@@ -18,6 +22,9 @@ abstract class BaseModuleFragment : Fragment() {
 
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
+
+    lateinit var navBaseViewModel: NavBaseViewModel
+    lateinit var sharedViewModel: SharedViewModel
 
     var mResources: Resources? = null
 
@@ -42,5 +49,51 @@ abstract class BaseModuleFragment : Fragment() {
     override fun onDestroy() {
         RealmManager.close()
         super.onDestroy()
+    }
+
+    var navController: NavController? = null
+
+    fun setNavController(view: View?) {
+        view?.let {
+            navController = Navigation.findNavController(it)
+            navBaseViewModel.getNewDestination().observe(this, Observer { dest ->
+                if (dest.first.status == ResourceState.LOADING) {
+                    dest.second?.let { listener ->
+                        listener.onNextNavigate(dest.first.consume())
+                    } ?: run {
+                        nextNavigate(dest.first.consume())
+                    }
+                    dest.first.status = ResourceState.DEFAULT
+                }
+            })
+        }
+    }
+
+    private fun navigateToUp() {
+        navController?.navigateUp()
+    }
+
+    fun nextNavigate(nav: Int?, bundle: Bundle? = null, extras: Navigator.Extras? = null) {
+        when (nav) {
+            -1 -> navigateToUp()
+            else -> navigate(nav ?: 0, bundle, extras)
+        }
+    }
+
+    private fun navigate(
+        destination: Int,
+        bundle: Bundle? = null,
+        extras: Navigator.Extras?
+    ) {
+        if (destination == 0)
+            navController?.navigateUp()
+        else {
+            try {
+                navController?.navigate(destination, bundle, null, extras)
+            } catch (e: IllegalArgumentException) {
+                // Actions for finish flow
+                activity?.finish()
+            }
+        }
     }
 }
