@@ -8,7 +8,7 @@ import com.anibalbastias.android.pulentapp.domain.search.repository.ISeriesRepos
 import io.reactivex.Flowable
 import javax.inject.Inject
 
-class GetSearchMusicUseCase @Inject constructor(
+open class GetSearchMusicUseCase @Inject constructor(
     private val detailRepository: ISeriesRepository,
     threadExecutor: APIThreadExecutor,
     postExecutionThread: APIPostExecutionThread

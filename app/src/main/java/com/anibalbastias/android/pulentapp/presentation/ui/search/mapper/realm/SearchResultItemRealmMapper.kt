@@ -10,7 +10,7 @@ import javax.inject.Inject
  * Created by anibalbastias on 2019-09-07.
  */
 
-class SearchResultItemRealmMapper @Inject constructor() :
+open class SearchResultItemRealmMapper @Inject constructor() :
     Mapper<ResultItemRealmData?, CollectionResultItemViewData?> {
 
     lateinit var keywordValue: String

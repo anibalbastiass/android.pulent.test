@@ -126,4 +126,12 @@ dependencies {
     implementation "androidx.navigation:navigation-ui-ktx:2.2.0-alpha01"
     implementation 'androidx.core:core-ktx:1.2.0-alpha03'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-savedstate:1.0.0-alpha03'
+
+    // CORE TESTING
+    testImplementation 'android.arch.core:core-testing:1.1.1'
+    // ROBOLECTRIC
+    testImplementation 'org.robolectric:robolectric:4.2'
+    testImplementation "org.robolectric:multidex:3.4.2"
+    testImplementation 'com.nhaarman:mockito-kotlin:1.5.0'
+    testImplementation 'androidx.test:core:1.2.0'
 }
