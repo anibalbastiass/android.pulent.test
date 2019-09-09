@@ -65,9 +65,10 @@
                     android:ellipsize="end"
                     android:fontFamily="@font/opensans_semibold"
                     android:maxLines="1"
-                    android:text="@{``+ item.trackTimeMillis}"
+                    android:text="@{``+ item.trackTimeFormat}"
                     android:textColor="@color/normalTextColor"
                     android:textSize="14sp"
+                    android:layout_marginEnd="10dp"
                     tools:text="02:03" />
 
         </LinearLayout>

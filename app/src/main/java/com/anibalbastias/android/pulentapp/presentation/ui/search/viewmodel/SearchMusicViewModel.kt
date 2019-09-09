@@ -23,6 +23,7 @@ import javax.inject.Inject
 import com.anibalbastias.android.pulentapp.presentation.ui.search.interfaces.GetSearchRecentsListener
 import com.anibalbastias.android.pulentapp.presentation.ui.search.model.CollectionResultItemViewData
 import com.anibalbastias.android.pulentapp.presentation.ui.search.model.TrackResultItemViewData
+import com.anibalbastias.android.pulentapp.presentation.ui.search.model.WrapperViewData
 import io.realm.RealmList
 import kotlin.collections.ArrayList
 
@@ -36,7 +37,6 @@ class SearchMusicViewModel @Inject constructor(
     companion object {
         const val PAGE_SIZE = 20
         private const val URL_FORMAT = "%s&offset=%d&mediaType=%s&limit=%d&country=%s&entity=%s&sort=recent"
-//        private const val URL_FORMAT = "%s&offset=%d&&limit=%d&country=%s&entity=%s&sort=recent"
         private const val SEARCH_URL = "search?term="
 
         private const val MEDIA_TYPE = "music"
@@ -73,20 +73,12 @@ class SearchMusicViewModel @Inject constructor(
     private val collectionsResultListLiveData: MutableLiveData<ArrayList<CollectionResultItemViewData?>?> =
         MutableLiveData()
 
-    private val tracksResultListLiveData: MutableLiveData<ArrayList<TrackResultItemViewData?>?> =
-        MutableLiveData()
     //endregion
 
     var searchCollectionResultListPaginationViewData: ArrayList<CollectionResultItemViewData?>?
         get() = collectionsResultListLiveData.value
         set(value) {
             collectionsResultListLiveData.value = value
-        }
-
-    var searchTrackResultListPaginationViewData: ArrayList<TrackResultItemViewData?>?
-        get() = tracksResultListLiveData.value
-        set(value) {
-            tracksResultListLiveData.value = value
         }
 
     override fun onCleared() {
@@ -118,27 +110,6 @@ class SearchMusicViewModel @Inject constructor(
         )
     }
 
-    fun getSearchSongsResultsData(isPaging: Boolean? = false) {
-        nextPageURL.set(
-            String.format(
-                URL_FORMAT,
-                SEARCH_URL + keyword.get(), offset.get(), MEDIA_TYPE, PAGE_SIZE, COUNTRY, SONG
-            )
-        )
-
-        if (!isPaging!!) {
-            isLoading.set(true)
-            getSearchMusicLiveData.postValue(Resource(ResourceState.LOADING, null, null))
-        }
-
-        return getSearchMusicUseCase.execute(
-            BaseSubscriber(
-                context?.applicationContext, this, searchViewDataMapper,
-                getSearchMusicLiveData, isLoading, isError
-            ), nextPageURL.get()
-        )
-    }
-
     fun onKeywordTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
         keyword.set(s.toString())
     }
@@ -153,7 +124,7 @@ class SearchMusicViewModel @Inject constructor(
 
             t.results?.let {
                 if (!it.filterNotNull().isNullOrEmpty()) {
-                    val addSuccessful = oldList?.addAll(it.toList())
+                    val addSuccessful = oldList?.addAll(((it as? ArrayList<CollectionResultItemViewData?>)!!))
                     if (addSuccessful == true) {
                         searchCollectionResultListPaginationViewData = oldList
                     }
@@ -161,7 +132,7 @@ class SearchMusicViewModel @Inject constructor(
             }
         } else {
             //FirstPage Loaded
-            searchCollectionResultListPaginationViewData = t.results
+            searchCollectionResultListPaginationViewData = t.results as? ArrayList<CollectionResultItemViewData?>
         }
     }
 
@@ -205,6 +176,6 @@ class SearchMusicViewModel @Inject constructor(
         }
         return SearchMusicViewData(
             resultCount = itemsResult.size,
-            results = itemsResult)
+            results = itemsResult as? ArrayList<WrapperViewData?>)
     }
 }

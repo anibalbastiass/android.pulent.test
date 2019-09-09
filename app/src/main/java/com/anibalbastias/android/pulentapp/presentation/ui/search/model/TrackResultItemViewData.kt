@@ -1,7 +1,11 @@
 package com.anibalbastias.android.pulentapp.presentation.ui.search.model
 
 import android.os.Parcelable
+import com.anibalbastias.android.pulentapp.presentation.util.empty
 import kotlinx.android.parcel.Parcelize
+import java.util.concurrent.TimeUnit
+import javax.xml.datatype.DatatypeConstants.HOURS
+
 
 /**
  * Created by anibalbastias on 2019-09-07.
@@ -41,4 +45,25 @@ data class TrackResultItemViewData(
     var collectionExplicitness: String? = null,
     var trackViewUrl: String? = null,
     var trackCensoredName: String? = null
-) : WrapperViewData(), Parcelable
+) : WrapperViewData(), Parcelable {
+
+    var trackTimeFormat: String? = String.empty()
+        get() {
+            val millis = trackTimeMillis?.toLong()!!
+            return String.format(
+                "%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(millis) - TimeUnit.HOURS.toMinutes(
+                    TimeUnit.MILLISECONDS.toHours(
+                        millis
+                    )
+                ),
+                TimeUnit.MILLISECONDS.toSeconds(millis) - TimeUnit.MINUTES.toSeconds(
+                    TimeUnit.MILLISECONDS.toMinutes(
+                        millis
+                    )
+                )
+            )
+        }
+        set(value) {
+            field = value
+        }
+}

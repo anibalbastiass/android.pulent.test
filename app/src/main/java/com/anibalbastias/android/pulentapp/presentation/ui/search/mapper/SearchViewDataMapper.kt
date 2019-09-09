@@ -20,7 +20,7 @@ class SearchViewDataMapper @Inject constructor(
         return type?.let {  item ->
             SearchMusicViewData(
                 resultCount = item.resultCount,
-                results = item.results?.map { wrapperViewDataMapper.executeMapping(it) } as ArrayList<CollectionResultItemViewData?>?
+                results = item.results?.map { wrapperViewDataMapper.executeMapping(it) } as ArrayList<WrapperViewData?>?
             )
         }
     }

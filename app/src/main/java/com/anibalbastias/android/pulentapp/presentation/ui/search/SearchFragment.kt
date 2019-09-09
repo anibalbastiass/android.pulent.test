@@ -146,19 +146,19 @@ class SearchFragment : BaseModuleFragment(),
         } else {
             if (items.results?.isNotEmpty()!!) {
                 // Set data
-                searchViewModel.searchCollectionResultListPaginationViewData = items.results
+                searchViewModel.searchCollectionResultListPaginationViewData = items.results as? ArrayList<CollectionResultItemViewData?>
 
                 items.results.let { itemsVD ->
                     binding?.searchListRecyclerView?.visible()
 
                     if (itemsVD.isNotEmpty()) {
                         searchMusicAdapter.clickHandler = this
-                        searchMusicAdapter.items = itemsVD
+                        searchMusicAdapter.items = (itemsVD as? ArrayList<CollectionResultItemViewData?>)!!
                         searchViewModel.isEmpty.set(false)
 
                         searchViewModel.putRecentSearchItem(
                             searchViewModel.keyword.get()!!,
-                            itemsVD
+                            (itemsVD as? ArrayList<CollectionResultItemViewData?>)!!
                         )
 
                         setAdapterByData()
