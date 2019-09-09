@@ -43,6 +43,11 @@ class ResultItemViewModel @Inject constructor(
     var nextPageURL: ObservableField<String> = ObservableField(String.empty())
     var keyword: ObservableField<String> = ObservableField(String.empty())
     var offset: ObservableInt = ObservableInt(0)
+
+    var seekPosition: ObservableInt = ObservableInt(0)
+
+    val isFirstTimePlayed: ObservableBoolean = ObservableBoolean(true)
+    var onPauseButton: ObservableBoolean = ObservableBoolean(false)
     // endregion
 
     private val getSearchMusicLiveData: MutableLiveData<Resource<SearchMusicViewData>> =

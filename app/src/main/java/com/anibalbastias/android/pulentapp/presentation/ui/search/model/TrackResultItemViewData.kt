@@ -1,8 +1,10 @@
 package com.anibalbastias.android.pulentapp.presentation.ui.search.model
 
 import android.os.Parcelable
+import androidx.databinding.ObservableBoolean
 import com.anibalbastias.android.pulentapp.presentation.util.empty
 import kotlinx.android.parcel.Parcelize
+import java.util.*
 import java.util.concurrent.TimeUnit
 import javax.xml.datatype.DatatypeConstants.HOURS
 
@@ -44,7 +46,9 @@ data class TrackResultItemViewData(
     var trackPrice: Double? = null,
     var collectionExplicitness: String? = null,
     var trackViewUrl: String? = null,
-    var trackCensoredName: String? = null
+    var trackCensoredName: String? = null,
+
+    var isPlaying: ObservableBoolean = ObservableBoolean(false)
 ) : WrapperViewData(), Parcelable {
 
     var trackTimeFormat: String? = String.empty()

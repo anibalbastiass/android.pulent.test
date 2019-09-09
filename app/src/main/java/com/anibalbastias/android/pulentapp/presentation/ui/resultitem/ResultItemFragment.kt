@@ -1,6 +1,8 @@
 package com.anibalbastias.android.pulentapp.presentation.ui.resultitem
 
+import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
@@ -16,9 +18,12 @@ import com.anibalbastias.android.pulentapp.presentation.ui.resultitem.interfaces
 import com.anibalbastias.android.pulentapp.presentation.ui.resultitem.viewmodel.ResultItemViewModel
 import com.anibalbastias.android.pulentapp.presentation.ui.search.model.SearchMusicViewData
 import com.anibalbastias.android.pulentapp.presentation.ui.search.model.TrackResultItemViewData
-import com.anibalbastias.android.pulentapp.presentation.util.applyFontForToolbarTitle
-import com.anibalbastias.android.pulentapp.presentation.util.implementObserver
-import com.anibalbastias.android.pulentapp.presentation.util.setArrowUpToolbar
+import com.anibalbastias.android.pulentapp.presentation.util.*
+import com.anibalbastias.android.pulentapp.presentation.util.media.MediaPlayerUtils
+import kotlinx.android.synthetic.main.view_cell_media_player.*
+import java.util.*
+import java.util.concurrent.TimeUnit
+import kotlin.collections.ArrayList
 
 
 /**
@@ -31,6 +36,7 @@ class ResultItemFragment : BaseModuleFragment(),
     override fun tagName(): String = this::class.java.simpleName
     override fun layoutId(): Int = R.layout.fragment_result_detail_main
 
+    private var mediaUtils: MediaPlayerUtils? = null
     private lateinit var binding: FragmentResultDetailMainBinding
 
     private lateinit var resultItemViewModel: ResultItemViewModel
@@ -81,12 +87,127 @@ class ResultItemFragment : BaseModuleFragment(),
         )
     }
 
-    override fun onClickView(view: View, item: TrackResultItemViewData) {
-
-    }
+    override fun onClickView(view: View, item: TrackResultItemViewData) {}
 
     override fun onPlayPauseTrack(item: TrackResultItemViewData) {
+        // Reset all tracks
+        resultItemViewModel.trackListResult.get()?.forEach {
+            it?.isPlaying?.set(false)
+        }
 
+        // Update playable track
+        item.isPlaying.set(true)
+
+        setStatusSeekbar(false)
+
+        binding.playerContainer.mediaPlayerDisplayText.text = "${item.artistName} - ${item.trackName}"
+        binding.playerContainer.mediaPlayerCounter.text = getString(R.string.initial_time)
+
+        val durationInMilliseconds = item.trackTimeMillis!!
+
+        binding.playerContainer.mediaPlayerTotalTime.text = String.format(
+            Locale.getDefault(), MediaPlayerUtils.FORMAT_TIME,
+            TimeUnit.MILLISECONDS.toMinutes(durationInMilliseconds.toLong()),
+            TimeUnit.MILLISECONDS.toSeconds(durationInMilliseconds.toLong())
+        )
+        setStatusSeekbar(true)
+
+        mediaUtils?.onDestroy()
+
+        setMediaPlayer(item.previewUrl)
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    private fun setStatusSeekbar(isEnabled: Boolean) {
+        binding.playerContainer.mediaPlayerSeekbar.setOnTouchListener { _, _ -> !isEnabled }
+    }
+
+    private fun setMediaPlayer(url: String?) {
+        resultItemViewModel.isFirstTimePlayed.set(true)
+        mediaUtils = MediaPlayerUtils()
+
+        try {
+            mediaUtils?.setupAudioPlayer(context!!,
+                url!!,
+                resultItemViewModel,
+                mediaPlayerCounterSlash,
+                mediaPlayerPlayButton,
+                mediaPlayerSeekbar,
+                mediaPlayerCounter,
+                mediaPlayerTotalTime,
+                mediaPlayerProgress, object : MediaPlayerUtils.DownloadListener {
+
+                    override fun onSuccessDownloadAudioFile() {
+                        if (activity != null) {
+                            activity!!.runOnUiThread {
+                                showPlayer()
+
+                                try {
+                                    if (mediaPlayerPlayButton != null) {
+                                        resultItemViewModel.run {
+
+                                            mediaPlayerPlayButton.isEnabled = true
+
+                                            if (isFirstTimePlayed.get()) {
+                                                isFirstTimePlayed.set(false)
+
+                                                if (!onPauseButton.get() && seekPosition.get() == 0) {
+                                                    mediaPlayerPlayButton.postDelayed({
+                                                        mediaPlayerPlayButton.performClick()
+                                                    }, 100)
+                                                }
+                                            }
+                                        }
+                                    }
+                                } catch (e: Exception) {
+                                    e.printStackTrace()
+                                }
+                            }
+                        }
+                    }
+
+                    override fun onFailedDownloadAudioFile() {
+                        activity?.runOnUiThread {
+                            dismissLoadingInGetCallRecording()
+                            mediaPlayerDisplayText?.setText(R.string.audio_error)
+                        }
+                    }
+                })
+        } catch (e: Exception) {
+            Log.d("Error set Media Player", e.message)
+        }
+        activateLoadingAndSeek()
+    }
+
+    private fun activateLoadingAndSeek() {
+        mediaPlayerPlayButton?.run {
+            isEnabled = true
+            visible()
+        }
+        mediaPlayerSeekbar.visible()
+        resultItemViewModel?.onPauseButton.set(false)
+    }
+
+    private fun dismissLoadingInGetCallRecording() {
+        mediaPlayerProgress?.gone()
+
+        mediaPlayerTotalTime?.visible()
+        mediaPlayerCounter?.visible()
+        mediaPlayerCounterSlash?.visible()
+
+        mediaPlayerPlayButton?.visible()
+        mediaPlayerSeekbar?.thumb?.mutate()?.alpha = 0
+        listenerContainer.visible()
+    }
+
+    private fun showPlayer() {
+        mediaPlayerSeekbar?.thumb?.mutate()?.alpha = 255
+        mediaPlayerPlayButton?.visible()
+        listenerContainer?.visible()
+        mediaPlayerProgress?.gone()
+        mediaPlayerCounter?.visible()
+        mediaPlayerTotalTime?.visible()
+        mediaPlayerCounterSlash?.visible()
     }
 
     private fun initViewModel() {
@@ -112,5 +233,21 @@ class ResultItemFragment : BaseModuleFragment(),
                 activity?.onBackPressed()
             }
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        mediaUtils?.onDestroy()
+    }
+
+    override fun onPause() {
+        Log.d(tagName(), "onPause ")
+        resultItemViewModel.onPauseButton.set(true)
+
+        if (mediaPlayerSeekbar != null) {
+            resultItemViewModel?.seekPosition.set(mediaUtils?.getCurrentPosition()?.toInt()!!)
+            mediaUtils?.onPause()
+        }
+        super.onPause()
     }
 }

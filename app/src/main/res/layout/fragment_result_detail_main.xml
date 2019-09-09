@@ -71,7 +71,7 @@
         <androidx.core.widget.NestedScrollView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginBottom="65dp"
+                android:layout_marginBottom="100dp"
                 app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
             <include
@@ -85,12 +85,12 @@
 
         </androidx.core.widget.NestedScrollView>
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <include
                 android:id="@+id/playerContainer"
                 android:layout_width="match_parent"
-                android:layout_height="65dp"
-                android:layout_gravity="bottom"
-                android:background="@drawable/box_stroke_player" />
+                android:layout_height="100dp"
+                layout="@layout/view_cell_media_player"
+                android:layout_gravity="bottom" />
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>
